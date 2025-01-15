@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   datasource:
     url: jdbc:mysql://localhost:3306/MySiteDB
     username: root
@@ -8,7 +10,10 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+
     show-sql: true
     properties:
       hibernate:
         format_sql: true
+        default_batch_fetch_size: 100
+        highlight-sql: true
