@@ -61,6 +61,7 @@ class OrderControllerTest {
 
 		entityManager.createNativeQuery("ALTER TABLE coffee_bean ALTER COLUMN id RESTART WITH 1").executeUpdate();
 		entityManager.createNativeQuery("ALTER TABLE menu_order ALTER COLUMN id RESTART WITH 1").executeUpdate();
+		entityManager.createNativeQuery("ALTER TABLE detail_order ALTER COLUMN id RESTART WITH 1").executeUpdate();
 
 		SiteUser user1 = new SiteUser();
 		user1.setEmail("user1email@naver.com");
@@ -88,13 +89,10 @@ class OrderControllerTest {
 		// 각 콩별로 1, 2, 3개씩 주문 들어감
 		CoffeeBean bean1 = new CoffeeBean("bean1", 1000, 49);
 		coffeeBeanRepository.save(bean1);
-		System.out.println(bean1.getId());
 		CoffeeBean bean2 = new CoffeeBean("bean2", 1000, 48);
 		coffeeBeanRepository.save(bean2);
-		System.out.println(bean2.getId());
 		CoffeeBean bean3 = new CoffeeBean("bean3", 1000, 47);
 		coffeeBeanRepository.save(bean3);
-		System.out.println(bean3.getId());
 	}
 
 	@Test
