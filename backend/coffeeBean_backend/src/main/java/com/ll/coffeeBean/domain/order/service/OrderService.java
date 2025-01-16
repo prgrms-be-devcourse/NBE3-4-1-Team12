@@ -1,9 +1,16 @@
 package com.ll.coffeeBean.domain.order.service;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
+<<<<<<< HEAD
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
+=======
+import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
+import com.ll.coffeeBean.domain.order.dto.OrderProductDto;
+import com.ll.coffeeBean.domain.order.dto.OrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.OrderResponseDto;
+>>>>>>> c928893 (feat: 주문 기능)
 import com.ll.coffeeBean.domain.order.dto.ProcessOrderDto;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
@@ -12,21 +19,39 @@ import com.ll.coffeeBean.domain.order.enums.OrderStatus;
 import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
+<<<<<<< HEAD
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+=======
+import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import com.ll.coffeeBean.global.exceptions.ServiceException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+>>>>>>> c928893 (feat: 주문 기능)
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+<<<<<<< HEAD
 import java.util.Optional;
+=======
+
+import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
+>>>>>>> c928893 (feat: 주문 기능)
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
     private final PastOrderRepository pastOrderRepository;
+<<<<<<< HEAD
 	private final CoffeeBeanService coffeeBeanService;
+=======
+    private final SiteUserRepository siteUserRepository;
+    private final CoffeeBeanRepository coffeeBeanRepository;
+>>>>>>> c928893 (feat: 주문 기능)
 
     /**
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
@@ -91,6 +116,7 @@ public class OrderService {
         }
     }
 
+<<<<<<< HEAD
 
 
 	public long count() {
@@ -173,4 +199,67 @@ public class OrderService {
 	public void deleteOrder(MenuOrder menuOrder) {
 		orderRepository.delete(menuOrder);
 	}
+=======
+    @Transactional
+    public OrderResponseDto createOrder(OrderRequestDto request) {
+        // 회원 정보 확인 및 업데이트
+        SiteUser customer = siteUserRepository.findByEmail(request.getCustomer().getEmail())
+                .orElseGet(() -> {
+                    SiteUser newCustomer = SiteUser
+                            .builder()
+                            .email(request.getCustomer().getEmail())
+                            .address(request.getCustomer().getAddress())
+                            .postCode(request.getCustomer().getPostcode())
+                            .build();
+                    return siteUserRepository.save(newCustomer); // 새로운 고객 저장
+                });
+
+        // 주소 갱신
+        customer.setAddress(request.getCustomer().getAddress());
+        customer.setPostCode(request.getCustomer().getPostcode());
+
+        // 주문 생성
+        MenuOrder menuOrder = MenuOrder
+                .builder()
+                .orderStatus(READY_FOR_DELIVERY)
+                .customer(customer)
+                .build();
+
+        int totalPrice = 0;
+        List<DetailOrder> detailOrders = new ArrayList<>();
+
+        for (OrderProductDto product : request.getProducts()) {
+            // CoffeeBean 조회
+            CoffeeBean coffeeBean = coffeeBeanRepository.findById(product.getId())
+                    .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
+
+            // 재고 확인 및 차감
+            coffeeBean.reduceStockWithValidation(product.getQuantity());
+            coffeeBeanRepository.save(coffeeBean); // 변경된 재고 저장
+
+            // DetailOrder 생성 및 추가
+            DetailOrder detailOrder = DetailOrder
+                    .builder()
+                    .name(coffeeBean.getName())
+                    .price(coffeeBean.getPrice())
+                    .quantity(product.getQuantity())
+                    .order(menuOrder)
+                    .build();
+            detailOrders.add(detailOrder);
+
+            totalPrice += coffeeBean.getPrice() * product.getQuantity();
+        }
+
+        // 주문 저장
+        menuOrder.setOrders(detailOrders);
+        orderRepository.save(menuOrder);
+
+        // 응답 생성
+        return new OrderResponseDto(menuOrder.getId(),
+                request.getCustomer(),
+                request.getProducts(),
+                totalPrice,
+                menuOrder.getOrderStatus().toString());
+    }
+>>>>>>> c928893 (feat: 주문 기능)
 }

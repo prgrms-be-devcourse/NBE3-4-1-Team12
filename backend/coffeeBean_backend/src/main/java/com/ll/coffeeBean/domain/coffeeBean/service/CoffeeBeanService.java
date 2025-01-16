@@ -17,4 +17,14 @@ public class CoffeeBeanService {
 	public long count() {
 		return coffeeBeanRepository.count();
 	}
+
+    public void createBean(String name, int price, int quantity) {
+        CoffeeBean coffeeBean = CoffeeBean
+                .builder()
+                .name(name)
+                .price(price)
+                .quantity(quantity)
+                .build();
+        coffeeBeanRepository.save(coffeeBean);
+    }
 }

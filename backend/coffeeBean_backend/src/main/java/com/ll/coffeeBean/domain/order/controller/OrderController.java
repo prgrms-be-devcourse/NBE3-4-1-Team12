@@ -8,14 +8,16 @@ import com.ll.coffeeBean.global.rsData.RsData;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import com.ll.coffeeBean.domain.order.dto.OrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.OrderResponseDto;
+import com.ll.coffeeBean.domain.order.service.OrderService;
+
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
 public class OrderController {
     private final OrderService orderService;
-
-
 
 	@PutMapping("/{orderId}")
 	RsData<PutRepAndResOrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
@@ -48,4 +50,15 @@ public class OrderController {
 				"200-1", "%d번 주문이 삭제되었습니다." .formatted(orderId));
 		}
 
+    @PostMapping
+    public RsData<OrderResponseDto> createOrder(@RequestBody @Valid OrderRequestDto request) {
+
+        OrderResponseDto response = orderService.createOrder(request);
+
+        return new RsData<>(
+                "201-1",
+                "주문이 완료되었습니다.",
+                response
+        );
+    }
 }
