@@ -101,7 +101,7 @@
     "Spring Boot.WebApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "Rebasing feature/order",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
     "node.js.detected.package.eslint": "true",
@@ -260,6 +260,7 @@
       <workItem from="1737073030491" duration="60000" />
       <workItem from="1737073095848" duration="32000" />
       <workItem from="1737073271835" duration="5131000" />
+      <workItem from="1737266045521" duration="1507000" />
     </task>
     <servers />
   </component>
@@ -297,7 +298,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="feature/order" />
+                        <option value="main" />
                       </list>
                     </value>
                   </entry>

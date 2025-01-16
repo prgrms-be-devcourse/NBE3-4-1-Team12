@@ -1,5 +1,6 @@
 package com.ll.coffeeBean.domain.coffeeBean.entity;
 
+import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.jpa.entity.BaseTime;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -21,6 +22,4 @@ public class CoffeeBean extends BaseTime {
 
     @Column
     private Integer quantity;
-
-
 }
