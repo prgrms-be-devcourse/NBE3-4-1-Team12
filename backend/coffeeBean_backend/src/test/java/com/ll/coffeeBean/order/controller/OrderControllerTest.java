@@ -25,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.hamcrest.Matchers.matchesPattern;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
@@ -189,8 +190,40 @@ class OrderControllerTest {
 	}
 
 	@Test
-	@DisplayName("DELETE 요청 처리")
+	@DisplayName("PUT 요청 처리 : 잘못 된 값 입력 (수량 음수 입력)")
 	void t4() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						put("/api/order/1")
+								.content("""
+										{
+										   "coffeeOrders": [
+										     {
+										       "id": 1, "quantity": -5
+										     },
+										     {
+										       "id": 2, "quantity": 3
+										     }
+										   ]
+										}
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("modifyOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value(matchesPattern(".*주문 수량은 0 이상이어야 합니다.*")));
+
+	}
+
+	@Test
+	@DisplayName("DELETE 요청 처리")
+	void t5() throws Exception {
 		ResultActions resultActions = mockMvc
 				.perform(
 						delete("/api/order/1")

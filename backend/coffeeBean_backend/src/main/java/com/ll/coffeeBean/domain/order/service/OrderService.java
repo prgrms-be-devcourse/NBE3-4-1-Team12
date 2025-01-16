@@ -2,8 +2,8 @@ package com.ll.coffeeBean.domain.order.service;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
-import com.ll.coffeeBean.domain.order.dto.DetailOrderDTO;
-import com.ll.coffeeBean.domain.order.dto.OrderRqDTO;
+import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
+import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
 import com.ll.coffeeBean.domain.order.dto.ProcessOrderDto;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
@@ -105,12 +105,12 @@ public class OrderService {
 
 	// 주문 수량과 재고 관련 로직
 	// 주문 수정 로직용, 다른 곳에서 사용하려면 수정 필요
-	public void checkStockQuantity(DetailOrderDTO detailOrderDTO, DetailOrder beanOrderToChange) {
+	public void checkStockQuantity(PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto, DetailOrder beanOrderToChange) {
 
-		CoffeeBean coffeeBean = coffeeBeanService.findById(detailOrderDTO.getId());
+		CoffeeBean coffeeBean = coffeeBeanService.findById(putRepAndResDetailOrderDto.getId());
 		
 		// 변경되어야 하는 수량 : 신규 수량 - 기존 수량
-		int changeQuantity =  detailOrderDTO.getQuantity() - beanOrderToChange.getQuantity(); // 변경되는 수량
+		int changeQuantity =  putRepAndResDetailOrderDto.getQuantity() - beanOrderToChange.getQuantity(); // 변경되는 수량
 
 		// 재고가 있는지 확인
 		if(coffeeBean.getQuantity() - changeQuantity < 0) {
@@ -129,42 +129,43 @@ public class OrderService {
 	// DetailOrder : 각 커피콩 별 주문
 	// OrderReqDTO : DetailOrderDTO 리스트 담겨있음
 	// DetailOrderDTO : DetailOrder 와 유사. id 와 quantity 만 있음
-	public OrderRqDTO modify(MenuOrder menuOrder, OrderRqDTO reqBody) {
+	public PutRepAndResOrderRqDTO modify(MenuOrder menuOrder, PutRepAndResOrderRqDTO reqBody) {
 		// reqBody 에 담겨있는 주문 목록 받기
-		List<DetailOrderDTO> orderDTOList = reqBody.getCoffeeOrders();
+		List<PutRepAndResDetailOrderDTO> orderDTOList = reqBody.getCoffeeOrders();
 
 		// 받아온 주문들의 각 커피콩 별 주문 처리
-		for(DetailOrderDTO detailOrderDTO : orderDTOList){
+		for(PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto : orderDTOList){
 			// 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
 			DetailOrder beanOrderToChange = menuOrder.getOrders()
 					.stream()
-					.filter(beanOrder -> beanOrder.getId().equals(detailOrderDTO.getId()))
+					.filter(beanOrder -> beanOrder.getId().equals(putRepAndResDetailOrderDto.getId()))
 					.findFirst().get();
 
 			// 재고관련 확인 및 처리
-			checkStockQuantity(detailOrderDTO, beanOrderToChange);
+			checkStockQuantity(putRepAndResDetailOrderDto, beanOrderToChange);
 
 			// 커피콩 주문 수량 변경
-			if(detailOrderDTO.getQuantity() == 0) {
+			if(putRepAndResDetailOrderDto.getQuantity() == 0) {
 				// 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
 				menuOrder.getOrders().remove(beanOrderToChange);
 			} else {
 				// 실제 수량 변경 로직
-				beanOrderToChange.setQuantity(detailOrderDTO.getQuantity());
+				beanOrderToChange.setQuantity(putRepAndResDetailOrderDto.getQuantity());
 			}
 		}
 
 		// DTO 에 담기 위한 작업들
 		// DetailOrder 에는 id 와 수량 외에도 가격 등 필요 없는 부분들 많음
-		List<DetailOrderDTO> detailOrderDTOList = new ArrayList<>();
+		List<PutRepAndResDetailOrderDTO> putRepAndResDetailOrderDTOList = new ArrayList<>();
 		for(DetailOrder beanOrders : menuOrder.getOrders()) {
-			DetailOrderDTO detailOrderDTO = new DetailOrderDTO();
-			detailOrderDTO.setId(beanOrders.getId());
-			detailOrderDTO.setQuantity(beanOrders.getQuantity());
-			detailOrderDTOList.add(detailOrderDTO);
+			PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto = new PutRepAndResDetailOrderDTO();
+			putRepAndResDetailOrderDto.setId(beanOrders.getId());
+			putRepAndResDetailOrderDto.setQuantity(beanOrders.getQuantity());
+			putRepAndResDetailOrderDTOList.add(putRepAndResDetailOrderDto);
 		}
-		OrderRqDTO orderReqDTO = new OrderRqDTO();
-		orderReqDTO.setCoffeeOrders(detailOrderDTOList);
+
+		PutRepAndResOrderRqDTO orderReqDTO = new PutRepAndResOrderRqDTO();
+		orderReqDTO.setCoffeeOrders(putRepAndResDetailOrderDTOList);
 
 		return orderReqDTO;
 	}
