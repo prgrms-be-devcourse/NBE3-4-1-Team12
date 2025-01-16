@@ -43,3 +43,7 @@ bin/
 
 ### Mac OS ###
 .DS_Store
+
+### Custom ###
+db_dev.mv.db
+db_dev.trace.db
