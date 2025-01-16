@@ -6,17 +6,21 @@ spring:
     username: root
     password: lldj123414
     driver-class-name: com.mysql.cj.jdbc.Driver
-    output:
-      ansi:
-        enabled: always #색깔
+  output:
+    ansi:
+      enabled: always #색깔
 
   jpa:
     hibernate:
       ddl-auto: update
-
     show-sql: true
     properties:
       hibernate:
         format_sql: true
         default_batch_fetch_size: 100
         highlight-sql: true
+logging:
+  level:
+    org.hibernate.SQL: DEBUG
+    org.hibernate.orm.jdbc.bind: TRACE
+    org.hibernate.orm.jdbc.extract: TRACE

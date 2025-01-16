@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class OrderReqDTO {
+public class OrderRqDTO {
 
 	private List<DetailOrderDTO> coffeeOrders;
 }

@@ -14,7 +14,7 @@ public class OrderScheduler {
     /**
      * 전날 14시부터 당일 14시까지의 주문 자동 처리 매일 14시에 주문 처리 수행
      */
-    @Scheduled(cron = "*/5 * * * * *")
+//    @Scheduled(cron = "*/5 * * * * *")
     @Transactional
     public void processOrderByScheduled() {
         orderService.processOrderByScheduled();

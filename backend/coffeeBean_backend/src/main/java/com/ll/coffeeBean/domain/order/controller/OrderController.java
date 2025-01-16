@@ -1,6 +1,6 @@
 package com.ll.coffeeBean.domain.order.controller;
 
-import com.ll.coffeeBean.domain.order.dto.OrderReqDTO;
+import com.ll.coffeeBean.domain.order.dto.OrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
@@ -18,33 +18,23 @@ public class OrderController {
 
 
 	@PutMapping("/{orderId}")
-	RsData<OrderReqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
-									@RequestBody @Valid OrderReqDTO reqBody) {
+	RsData<OrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
+								   @RequestBody @Valid OrderRqDTO reqBody) {
 
-		System.out.println("주문 id : " + orderId);
-
+		// orderId 에 해당하는 주문 찾기
 		MenuOrder menuOrder = orderService.findById(orderId)
 				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
 
-		OrderReqDTO orderResDTO = orderService.modify(menuOrder, reqBody);
+		// 찾은 주문과 사용자 요청 서비스로 전달
+		OrderRqDTO orderPayload = orderService.modify(menuOrder, reqBody);
 
+		// 상태코드와 메시지, 수정 요청한 사용자의 주문 내용 응답에 보냄
 		return new RsData<>(
 				"200-1", "%d번 주문이 수정되었습니다.".formatted(orderId),
-				// TODO : 수정된 주문 내역 응답
-				orderResDTO
+				orderPayload
 		);
 	}
 
 
-	/*
-	@deleteMapping("/api/order/{id}")
-Rsdata<Void> deleteOrder(@PathVariable long id) {
-		Order order = orderService.findById(id);
 
-		orderService.deleteOrder(order);
-
-		return new RsData<> (
-				"200-1", "%d번 주문이 삭제되었습니다." .formatted(id)
-};
-*/
 }
