@@ -11,6 +11,7 @@ import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
 import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
+
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -37,10 +38,12 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class OrderService {
     private final OrderRepository orderRepository;
+    private final DetailOrderRepository detailOrderRepository;
     private final PastOrderRepository pastOrderRepository;
     private final CoffeeBeanService coffeeBeanService;
     private final SiteUserRepository siteUserRepository;
     private final CoffeeBeanRepository coffeeBeanRepository;
+    private final SiteUserRepository userRepository;
 
 
     public long count() {
@@ -74,6 +77,7 @@ public class OrderService {
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
      * What : 어차피 매일 14시에 실행되는데, 굳이 atTime 까지 쓸 필요가 있는가
      */
+    @Transactional
     public void processOrderByScheduled() {
         System.out.println("========================");
         System.out.println("Start Scheduled!!\n\n");
@@ -87,10 +91,6 @@ public class OrderService {
         for (MenuOrder order : orders) {
             processOrder(order);
         }
-
-        // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
-        orderRepository.deleteAll(orders);
-
         System.out.println("\n\n========================");
         System.out.println("End Scheduled!!\n\n");
     }
@@ -99,18 +99,31 @@ public class OrderService {
      * TODO : PastOrder DB에 DetailOrder 개별로 저장할 것인가, MenuOrder 로 저장할 것인가
      * 주문 처리 (추후 구현) 처리 방법 정의 후 구현 예정
      */
+    @Transactional
     public void processOrder(MenuOrder order) {
         /**
          * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
          */
         int totalPrice = 0;
 
+        List<DetailOrder> orders = order.getOrders();
+        List<DetailOrder> copiedOrders = new ArrayList<>(orders);
+
         // 처리된 작업은 지난 주문 DB에 저장
         pastOrderRepository.save(PastOrder.builder()
-                .orders(order.getOrders())
+                .orders(copiedOrders)
                 .customer(order.getCustomer())
                 .orderStatus(OrderStatus.DELIVERED)
                 .build());
+
+        // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
+        order.getCustomer().removeMenu(order);
+    }
+
+    public void flush() {
+        orderRepository.flush();
+        detailOrderRepository.flush();
+        userRepository.flush();
     }
 
     public Optional<MenuOrder> findById(long id) {

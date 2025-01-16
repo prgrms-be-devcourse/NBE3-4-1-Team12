@@ -6,8 +6,10 @@ import com.ll.coffeeBean.global.jpa.entity.BaseTime;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,10 +24,12 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PastOrder extends BaseTime {
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetailOrder> orders;
 
-    @ManyToOne
+    @OneToMany(mappedBy = "pastOrder", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<DetailOrder> orders = new ArrayList<>();
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser customer;
 
     @Column

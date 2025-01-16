@@ -6,6 +6,13 @@ import com.ll.coffeeBean.global.jpa.entity.BaseTime;
 import jakarta.persistence.*;
 import lombok.*;
 
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -17,11 +24,20 @@ import java.util.List;
 public class MenuOrder extends BaseTime {
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<DetailOrder> orders;
+    @Builder.Default
+    private List<DetailOrder> orders = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
     private SiteUser customer;
 
     @Column
     private OrderStatus orderStatus;
+
+    public void addOrder(DetailOrder order) {
+        this.orders.add(order);
+    }
+
+    public void removeOrder(DetailOrder order) {
+        this.orders.remove(order);
+    }
 }
