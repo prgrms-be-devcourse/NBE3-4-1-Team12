@@ -1,5 +1,7 @@
 package com.ll.coffeeBean.domain.siteUser.dto;
 
+package com.ll.coffeeBean.domain.siteUser.dto;
+
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;

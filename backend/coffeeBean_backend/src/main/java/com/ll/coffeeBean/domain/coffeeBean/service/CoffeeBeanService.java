@@ -17,9 +17,9 @@ public class CoffeeBeanService {
         return coffeeBeanRepository.findById(id).get();
     }
 
-    public long count() {
-        return coffeeBeanRepository.count();
-    }
+	public long count() {
+		return coffeeBeanRepository.count();
+	}
 
     public void createBean(String name, int price, int quantity) {
         CoffeeBean coffeeBean = CoffeeBean
