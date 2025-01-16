@@ -7,10 +7,16 @@ import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
 =======
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
+<<<<<<< HEAD
 import com.ll.coffeeBean.domain.order.dto.OrderProductDto;
 import com.ll.coffeeBean.domain.order.dto.OrderRequestDto;
 import com.ll.coffeeBean.domain.order.dto.OrderResponseDto;
 >>>>>>> c928893 (feat: 주문 기능)
+=======
+import com.ll.coffeeBean.domain.order.dto.PostDetailOrderDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
+>>>>>>> b609160 (refactor: dto 이름 수정)
 import com.ll.coffeeBean.domain.order.dto.ProcessOrderDto;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
@@ -46,12 +52,9 @@ import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVER
 public class OrderService {
     private final OrderRepository orderRepository;
     private final PastOrderRepository pastOrderRepository;
-<<<<<<< HEAD
 	private final CoffeeBeanService coffeeBeanService;
-=======
     private final SiteUserRepository siteUserRepository;
     private final CoffeeBeanRepository coffeeBeanRepository;
->>>>>>> c928893 (feat: 주문 기능)
 
     /**
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
@@ -201,15 +204,13 @@ public class OrderService {
 	}
 =======
     @Transactional
-    public OrderResponseDto createOrder(OrderRequestDto request) {
+    public PostOrderResponseDto createOrder(PostOrderRequestDto request) {
         // 회원 정보 확인 및 업데이트
         SiteUser customer = siteUserRepository.findByEmail(request.getCustomer().getEmail())
                 .orElseGet(() -> {
                     SiteUser newCustomer = SiteUser
                             .builder()
                             .email(request.getCustomer().getEmail())
-                            .address(request.getCustomer().getAddress())
-                            .postCode(request.getCustomer().getPostcode())
                             .build();
                     return siteUserRepository.save(newCustomer); // 새로운 고객 저장
                 });
@@ -228,7 +229,7 @@ public class OrderService {
         int totalPrice = 0;
         List<DetailOrder> detailOrders = new ArrayList<>();
 
-        for (OrderProductDto product : request.getProducts()) {
+        for (PostDetailOrderDto product : request.getProducts()) {
             // CoffeeBean 조회
             CoffeeBean coffeeBean = coffeeBeanRepository.findById(product.getId())
                     .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
@@ -255,7 +256,7 @@ public class OrderService {
         orderRepository.save(menuOrder);
 
         // 응답 생성
-        return new OrderResponseDto(menuOrder.getId(),
+        return new PostOrderResponseDto(menuOrder.getId(),
                 request.getCustomer(),
                 request.getProducts(),
                 totalPrice,

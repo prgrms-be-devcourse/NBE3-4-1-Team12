@@ -2,6 +2,8 @@ package com.ll.coffeeBean.domain.order.controller;
 
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
+import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
@@ -51,9 +53,9 @@ public class OrderController {
 		}
 
     @PostMapping
-    public RsData<OrderResponseDto> createOrder(@RequestBody @Valid OrderRequestDto request) {
+    public RsData<PostOrderResponseDto> createOrder(@RequestBody @Valid PostOrderRequestDto request) {
 
-        OrderResponseDto response = orderService.createOrder(request);
+        PostOrderResponseDto response = orderService.createOrder(request);
 
         return new RsData<>(
                 "201-1",
