@@ -1,6 +1,5 @@
 package com.ll.coffeeBean.domain.order.controller;
 
-
 import com.ll.coffeeBean.domain.order.dto.OrderReqDTO;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.service.OrderService;
@@ -11,15 +10,16 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/order")
 @RequiredArgsConstructor
+@RequestMapping("/api/order")
 public class OrderController {
-	private final OrderService orderService;
+    private final OrderService orderService;
+
 
 
 	@PutMapping("/{orderId}")
 	RsData<OrderReqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
-							  @RequestBody @Valid OrderReqDTO reqBody) {
+									@RequestBody @Valid OrderReqDTO reqBody) {
 
 		System.out.println("주문 id : " + orderId);
 
@@ -47,5 +47,4 @@ Rsdata<Void> deleteOrder(@PathVariable long id) {
 				"200-1", "%d번 주문이 삭제되었습니다." .formatted(id)
 };
 */
-
 }
