@@ -50,7 +50,6 @@ public class OrderService {
         return orderRepository.count();
     }
 
-
     //pageable 설정 후 jpa를 유저 정보와 pageable를 이용해 page 데이터 탐색
     public PageDto<GetResMenuOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
 
@@ -115,6 +114,13 @@ public class OrderService {
                 .customer(order.getCustomer())
                 .orderStatus(OrderStatus.DELIVERED)
                 .build());
+
+        for (DetailOrder detailOrder : orders) {
+            detailOrder.setOrder(null);
+        }
+
+        // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
+        orderRepository.deleteById(order.getId());
 
         // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
         order.getCustomer().removeMenu(order);

@@ -58,37 +58,64 @@ class OrderServiceTest {
                 .orderStatus(OrderStatus.READY_FOR_DELIVERY)
                 .build();
 
+<<<<<<< HEAD
 //        List<DetailOrder> orders = new ArrayList<>();
 
         menuOrder.addOrder(DetailOrder.builder()
+=======
+        siteUserRepository.save(customer);
+
+        List<DetailOrder> orders = new ArrayList<>();
+
+        orders.add(DetailOrder.builder()
+>>>>>>> 32b0151 (버그 상태)
                 .name("americano")
                 .price(1500)
                 .quantity(2)
                 .order(menuOrder)
                 .build());
 
+<<<<<<< HEAD
         menuOrder.addOrder(DetailOrder.builder()
+=======
+        orders.add(DetailOrder.builder()
+>>>>>>> 32b0151 (버그 상태)
                 .name("latte")
                 .price(3000)
                 .quantity(1)
                 .order(menuOrder)
                 .build());
 
+<<<<<<< HEAD
         menuOrder.addOrder(DetailOrder.builder()
+=======
+        orders.add(DetailOrder.builder()
+>>>>>>> 32b0151 (버그 상태)
                 .name("ice tea")
                 .price(3000)
                 .quantity(3)
                 .order(menuOrder)
                 .build());
 
+<<<<<<< HEAD
         customer.addMenu(menuOrder);
         siteUserRepository.save(customer);
+=======
+        menuOrder.setOrders(orders);
+>>>>>>> 32b0151 (버그 상태)
         orderRepository.save(menuOrder);
 
         assertEquals(orderRepository.count(), 1);
         assertEquals(detailOrderRepository.count(), 3);
+<<<<<<< HEAD
         orderService.processOrderByScheduled();
         orderService.flush();
+=======
+
+//        customer.setMenu(List.of(menuOrder));
+        List<SiteUser> os = siteUserRepository.findAll();
+        orderService.processOrderByScheduled();
+>>>>>>> 32b0151 (버그 상태)
 
         assertEquals(orderRepository.count(), 0);
         assertEquals(detailOrderRepository.count(), 0);
