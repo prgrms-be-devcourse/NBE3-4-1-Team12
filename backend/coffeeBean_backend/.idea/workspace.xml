@@ -58,23 +58,23 @@
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
   </component>
   <component name="GitHubPullRequestSearchHistory">{
-  &quot;lastFilter&quot;: {
+    &quot;lastFilter&quot;: {
     &quot;state&quot;: &quot;OPEN&quot;,
     &quot;assignee&quot;: &quot;Taeheeeeeee&quot;
-  }
-}</component>
+    }
+    }</component>
   <component name="GithubDefaultAccount">
     <option name="defaultAccountId" value="0debaa7d-5abf-4d30-94c3-ec950221453b" />
   </component>
   <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;selectedUrlAndAccountId&quot;: {
     &quot;url&quot;: &quot;https://github.com/prgrms-be-devcourse/NBE3-4-1-Team12.git&quot;,
     &quot;accountId&quot;: &quot;0debaa7d-5abf-4d30-94c3-ec950221453b&quot;
-  }
-}</component>
+    }
+    }</component>
   <component name="ProjectColorInfo">{
-  &quot;associatedIndex&quot;: 1
-}</component>
+    &quot;associatedIndex&quot;: 1
+    }</component>
   <component name="ProjectId" id="2rbokmWShVTb8WUKp2RuwOq3kr3" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
@@ -260,7 +260,6 @@
       <workItem from="1737073030491" duration="60000" />
       <workItem from="1737073095848" duration="32000" />
       <workItem from="1737073271835" duration="5131000" />
-      <workItem from="1737266045521" duration="1737000" />
     </task>
     <servers />
   </component>
@@ -298,7 +297,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="main" />
+                        <option value="feature/order" />
                       </list>
                     </value>
                   </entry>
