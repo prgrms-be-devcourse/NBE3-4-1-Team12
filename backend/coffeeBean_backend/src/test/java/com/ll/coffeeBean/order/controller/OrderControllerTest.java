@@ -11,9 +11,7 @@ import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.UserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -27,6 +25,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -55,7 +54,13 @@ class OrderControllerTest {
 	@BeforeEach
 	void beforeEach() {
 		// 이전 AUTO_INCREMENT 초기화
+		coffeeBeanRepository.deleteAll();
+		orderRepository.deleteAll();
+		detailOrderRepository.deleteAll();
+		userRepository.deleteAll();
+
 		entityManager.createNativeQuery("ALTER TABLE coffee_bean ALTER COLUMN id RESTART WITH 1").executeUpdate();
+		entityManager.createNativeQuery("ALTER TABLE menu_order ALTER COLUMN id RESTART WITH 1").executeUpdate();
 
 		SiteUser user1 = new SiteUser();
 		user1.setEmail("user1email@naver.com");
@@ -183,5 +188,22 @@ class OrderControllerTest {
 				.andExpect(status().isConflict())
 				.andExpect(jsonPath("$.resultCode").value("409"))
 				.andExpect(jsonPath("$.msg").value("재고가 부족합니다.ㅜㅜㅜ"));
+	}
+
+	@Test
+	@DisplayName("DELETE 요청 처리")
+	void t4() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						delete("/api/order/1")
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("deleteOrder"))
+				.andExpect(status().isOk())
+				.andExpect(jsonPath("$.resultCode").value("200-1"))
+				.andExpect(jsonPath("$.msg").value("1번 주문이 삭제되었습니다."));
 	}
 }

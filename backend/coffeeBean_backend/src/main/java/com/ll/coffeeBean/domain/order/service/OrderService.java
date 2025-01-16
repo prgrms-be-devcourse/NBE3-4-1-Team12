@@ -103,6 +103,26 @@ public class OrderService {
 		return order;
 	}
 
+	// 주문 수량과 재고 관련 로직
+	// 주문 수정 로직용, 다른 곳에서 사용하려면 수정 필요
+	public void checkStockQuantity(DetailOrderDTO detailOrderDTO, DetailOrder beanOrderToChange) {
+
+		CoffeeBean coffeeBean = coffeeBeanService.findById(detailOrderDTO.getId());
+		
+		// 변경되어야 하는 수량 : 신규 수량 - 기존 수량
+		int changeQuantity =  detailOrderDTO.getQuantity() - beanOrderToChange.getQuantity(); // 변경되는 수량
+
+		// 재고가 있는지 확인
+		if(coffeeBean.getQuantity() - changeQuantity < 0) {
+			// 그건 안됨! 오류 뿜기
+			throw new ServiceException("409", "재고가 부족합니다.ㅜㅜㅜ");
+		} else {
+			// 재고 변경
+			coffeeBean.setQuantity(coffeeBean.getQuantity() - changeQuantity);
+		}
+
+		System.out.println("변경된 재고 : " + coffeeBean.getQuantity() + " / 재고가 %d 만큼 변경되었습니다.".formatted(changeQuantity));
+	}
 
 	// 주문 수정 비즈니스 로직 (MenuOrder 안에 있는 DetailOrder 수정)
 	// MenuOrder : 고객의 주문 정보
@@ -113,7 +133,7 @@ public class OrderService {
 		// reqBody 에 담겨있는 주문 목록 받기
 		List<DetailOrderDTO> orderDTOList = reqBody.getCoffeeOrders();
 
-		// 받아온 주문들의 각 커피콩 별 주문 처리작업
+		// 받아온 주문들의 각 커피콩 별 주문 처리
 		for(DetailOrderDTO detailOrderDTO : orderDTOList){
 			// 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
 			DetailOrder beanOrderToChange = menuOrder.getOrders()
@@ -121,23 +141,12 @@ public class OrderService {
 					.filter(beanOrder -> beanOrder.getId().equals(detailOrderDTO.getId()))
 					.findFirst().get();
 
-			// 주문 수량과 재고 관련 로직
-			CoffeeBean coffeeBean = coffeeBeanService.findById(detailOrderDTO.getId());
-			System.out.println("지금 가진 재고 : " + coffeeBean.getQuantity());
-			int changeQuantity =  detailOrderDTO.getQuantity() - beanOrderToChange.getQuantity(); // 변경되는 수량
-			// 재고가 있는지 확인
-			if(coffeeBean.getQuantity() - changeQuantity < 0) {
-				// 그건 안됨! 오류 뿜기
-				throw new ServiceException("409", "재고가 부족합니다.ㅜㅜㅜ");
-			} else {
-				// 재고 변경
-				coffeeBean.setQuantity(coffeeBean.getQuantity() - changeQuantity);
-			}
-			System.out.println("변경된 재고 : " + coffeeBean.getQuantity());
+			// 재고관련 확인 및 처리
+			checkStockQuantity(detailOrderDTO, beanOrderToChange);
 
-			// 수량 변경 관련 로직
+			// 커피콩 주문 수량 변경
 			if(detailOrderDTO.getQuantity() == 0) {
-				// 변경 수량이 0 이면 아예 DetailOrder 를 삭제
+				// 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
 				menuOrder.getOrders().remove(beanOrderToChange);
 			} else {
 				// 실제 수량 변경 로직
@@ -158,5 +167,9 @@ public class OrderService {
 		orderReqDTO.setCoffeeOrders(detailOrderDTOList);
 
 		return orderReqDTO;
+	}
+
+	public void deleteOrder(MenuOrder menuOrder) {
+		orderRepository.delete(menuOrder);
 	}
 }

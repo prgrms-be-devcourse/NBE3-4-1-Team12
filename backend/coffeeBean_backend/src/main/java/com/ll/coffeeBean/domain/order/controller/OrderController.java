@@ -36,5 +36,16 @@ public class OrderController {
 	}
 
 
+	@DeleteMapping("/{orderId}")
+	RsData<Void> deleteOrder(@PathVariable(name = "orderId") long orderId) {
+
+		MenuOrder menuOrder = orderService.findById(orderId)
+				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
+
+		orderService.deleteOrder(menuOrder);
+
+		return new RsData<> (
+				"200-1", "%d번 주문이 삭제되었습니다." .formatted(orderId));
+		}
 
 }
