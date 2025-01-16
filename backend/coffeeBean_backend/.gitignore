@@ -1,6 +1,5 @@
 .gradle
 build/
-build.gradle
 !gradle/wrapper/gradle-wrapper.jar
 !**/src/main/**/build/
 !**/src/test/**/build/
@@ -11,6 +10,7 @@ build.gradle
 .idea/jarRepositories.xml
 .idea/compiler.xml
 .idea/libraries/
+.idea/
 ../.idea
 *.iws
 *.iml
