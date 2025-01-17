@@ -2,6 +2,7 @@ package com.ll.coffeeBean.domain.coffeeBean.service;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
+import com.ll.coffeeBean.global.exceptions.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -27,4 +28,13 @@ public class CoffeeBeanService {
                 .build();
         coffeeBeanRepository.save(coffeeBean);
     }
+
+	// 재고
+	public void reduceStockWithValidation(CoffeeBean coffeeBean, int orderQuantity) {
+		if (coffeeBean.getQuantity() < orderQuantity) {
+			throw new ServiceException("400-1", "재고가 부족합니다. 남은 재고: " + coffeeBean.getQuantity());
+		}
+
+		coffeeBean.setQuantity(coffeeBean.getQuantity() - orderQuantity);
+	}
 }

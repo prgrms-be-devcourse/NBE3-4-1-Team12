@@ -210,7 +210,7 @@ public class OrderService {
                     .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
 
             // 재고 확인 및 차감
-            coffeeBean.reduceStockWithValidation(product.getQuantity());
+            coffeeBeanService.reduceStockWithValidation(coffeeBean, product.getQuantity());
             coffeeBeanRepository.save(coffeeBean); // 변경된 재고 저장
 
             // DetailOrder 생성 및 추가
