@@ -13,4 +13,8 @@ public class CoffeeBeanService {
 	public CoffeeBean findById(Long id) {
 		return coffeeBeanRepository.findById(id).get();
 	}
+
+	public long count() {
+		return coffeeBeanRepository.count();
+	}
 }
