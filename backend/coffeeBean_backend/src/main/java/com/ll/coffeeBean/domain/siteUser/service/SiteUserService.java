@@ -2,27 +2,23 @@ package com.ll.coffeeBean.domain.siteUser.service;
 
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
-import com.ll.coffeeBean.domain.siteUser.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
-@RequiredArgsConstructor
-public class UserService {
+import java.util.Optional;
 
-    private final UserRepository userRepository;
+@AllArgsConstructor
+@Service
+public class SiteUserService {
+
     private final SiteUserRepository siteUserRepository;
 
+    public Optional<SiteUser> findByEmail(String email) {
+        return siteUserRepository
+                .findByEmail(email);
 
-    public long count() {
-        return userRepository.count();
     }
-
-    public SiteUser findByEmail(String email) {
-        return userRepository.findByEmail(email);
-    }
-
 
     @Transactional
     public SiteUser create(String address,String email,String postCode) {

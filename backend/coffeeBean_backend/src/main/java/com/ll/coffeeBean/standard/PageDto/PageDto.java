@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.springframework.data.domain.Page;
 import org.springframework.lang.NonNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 //여기서 수정
@@ -26,5 +27,13 @@ public class PageDto<T> {
         this.totalPages = page.getTotalPages();
         this.totalItems = page.getTotalElements();
         this.items = page.getContent();
+    }
+
+    public PageDto() {
+        this.currentPageNumber = 0;
+        this.pageSize = 0;
+        this.totalPages = 0;
+        this.totalItems = 0;
+        this.items = new ArrayList<>();
     }
 }
