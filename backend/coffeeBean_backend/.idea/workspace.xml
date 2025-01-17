@@ -4,7 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="" />
+    <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../db_dev.mv.db" beforeDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -20,6 +22,31 @@
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
     </projectState>
+  </component>
+  <component name="ExternalProjectsManager">
+    <system id="GRADLE">
+      <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <projects_view>
+          <tree_state>
+            <expand>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="coffeeBean_backend" type="f1a62948:ProjectNode" />
+              </path>
+              <path>
+                <item name="" type="6a2764b6:ExternalProjectsStructure$RootNode" />
+                <item name="coffeeBean_backend" type="f1a62948:ProjectNode" />
+                <item name="Tasks" type="e4a08cd1:TasksNode" />
+              </path>
+            </expand>
+            <select />
+          </tree_state>
+        </projects_view>
+      </state>
+    </system>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -59,6 +86,11 @@
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Gradle.coffeeBean_backend [:WebApplication.main()].executor": "Run",
+    "JUnit.OrderControllerTest.executor": "Run",
+    "JUnit.OrderControllerTest.t10.executor": "Run",
+    "JUnit.OrderControllerTest.t7.executor": "Run",
+    "JUnit.OrderControllerTest.t8.executor": "Run",
+    "JUnit.OrderControllerTest.t9.executor": "Run",
     "RequestMappingsPanelOrder0": "0",
     "RequestMappingsPanelOrder1": "1",
     "RequestMappingsPanelWidth0": "75",
@@ -69,16 +101,19 @@
     "Spring Boot.WebApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "Rebasing feature/order",
+    "git-widget-placeholder": "feature/order",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend/src/main/java/com/ll/coffeeBean/domain/order/dto",
+    "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
     "node.js.selected.package.tslint": "(autodetect)",
     "nodejs_package_manager_path": "npm",
     "onboarding.tips.debug.path": "C:/Users/rdh04/Project/coffeeBean-project/backend/coffeeBean_backend/src/main/java/org/example/Main.java",
-    "settings.editor.selected.configurable": "File.Encoding",
+    "project.structure.last.edited": "Project",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.2",
+    "settings.editor.selected.configurable": "reference.settingsdialog.project.gradle",
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
@@ -100,7 +135,86 @@
       <recent name="com.ll.coffeeBean.domain.order.controller" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="JUnit.OrderControllerTest">
+    <configuration name="OrderControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderControllerTest.t10" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
+      <option name="METHOD_NAME" value="t10" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderControllerTest.t7" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
+      <option name="METHOD_NAME" value="t7" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderControllerTest.t8" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
+      <option name="METHOD_NAME" value="t8" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="OrderControllerTest.t9" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
+      <option name="METHOD_NAME" value="t9" />
+      <option name="TEST_OBJECT" value="method" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="WebApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
       <module name="coffeeBean_backend.main" />
@@ -109,6 +223,15 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="JUnit.OrderControllerTest" />
+        <item itemvalue="JUnit.OrderControllerTest.t10" />
+        <item itemvalue="JUnit.OrderControllerTest.t9" />
+        <item itemvalue="JUnit.OrderControllerTest.t8" />
+        <item itemvalue="JUnit.OrderControllerTest.t7" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SharedIndexes">
     <attachedChunks>
@@ -129,6 +252,9 @@
       <workItem from="1736998105344" duration="150000" />
       <workItem from="1736998261037" duration="642000" />
       <workItem from="1736999597205" duration="11832000" />
+      <workItem from="1737073030491" duration="60000" />
+      <workItem from="1737073095848" duration="32000" />
+      <workItem from="1737073271835" duration="5131000" />
     </task>
     <servers />
   </component>
@@ -136,6 +262,26 @@
     <option name="version" value="3" />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
     <option name="TAB_STATES">
       <map>
         <entry key="MAIN">
@@ -146,7 +292,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/feature/order" />
+                        <option value="origin/bugFix/2025011601" />
                       </list>
                     </value>
                   </entry>

@@ -1,23 +1,9 @@
 package com.ll.coffeeBean.domain.order.service;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
-<<<<<<< HEAD
-import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
-import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
-import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
-=======
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
-<<<<<<< HEAD
-import com.ll.coffeeBean.domain.order.dto.OrderProductDto;
-import com.ll.coffeeBean.domain.order.dto.OrderRequestDto;
-import com.ll.coffeeBean.domain.order.dto.OrderResponseDto;
->>>>>>> c928893 (feat: 주문 기능)
-=======
-import com.ll.coffeeBean.domain.order.dto.PostDetailOrderDto;
-import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
-import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
->>>>>>> b609160 (refactor: dto 이름 수정)
-import com.ll.coffeeBean.domain.order.dto.ProcessOrderDto;
+import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
+import com.ll.coffeeBean.domain.order.dto.*;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -25,27 +11,18 @@ import com.ll.coffeeBean.domain.order.enums.OrderStatus;
 import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
-<<<<<<< HEAD
-import com.ll.coffeeBean.global.exceptions.ServiceException;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-=======
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
->>>>>>> c928893 (feat: 주문 기능)
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-<<<<<<< HEAD
 import java.util.Optional;
-=======
 
 import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
->>>>>>> c928893 (feat: 주문 기능)
 
 @Service
 @RequiredArgsConstructor
@@ -118,8 +95,6 @@ public class OrderService {
                     .build());
         }
     }
-
-<<<<<<< HEAD
 
 
 	public long count() {
@@ -202,7 +177,7 @@ public class OrderService {
 	public void deleteOrder(MenuOrder menuOrder) {
 		orderRepository.delete(menuOrder);
 	}
-=======
+
     @Transactional
     public PostOrderResponseDto createOrder(PostOrderRequestDto request) {
         // 회원 정보 확인 및 업데이트
@@ -262,5 +237,4 @@ public class OrderService {
                 totalPrice,
                 menuOrder.getOrderStatus().toString());
     }
->>>>>>> c928893 (feat: 주문 기능)
 }

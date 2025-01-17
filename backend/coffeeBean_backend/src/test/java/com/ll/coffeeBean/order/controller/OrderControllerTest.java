@@ -26,8 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.hamcrest.Matchers.matchesPattern;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
@@ -236,5 +235,253 @@ class OrderControllerTest {
 				.andExpect(status().isOk())
 				.andExpect(jsonPath("$.resultCode").value("200-1"))
 				.andExpect(jsonPath("$.msg").value("1번 주문이 삭제되었습니다."));
+	}
+
+	@Test
+	@DisplayName("POST 주문")
+	void t6() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "test@test.com",
+										             "address": "서울 어쩌구",
+										             "postcode": "12345"
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": 2
+										         },
+										         {
+										             "id": 2,
+										             "quantity": 3
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isCreated())
+				.andExpect(jsonPath("$.resultCode").value("201-1"))
+				.andExpect(jsonPath("$.msg").value("주문이 완료되었습니다."))
+				.andExpect(jsonPath("$.data.orderId").value(2))
+				.andExpect(jsonPath("$.data.customer.email").value("test@test.com"))
+				.andExpect(jsonPath("$.data.customer.address").value("서울 어쩌구"))
+				.andExpect(jsonPath("$.data.customer.postcode").value("12345"))
+				.andExpect(jsonPath("$.data.products[0].id").value(1))
+				.andExpect(jsonPath("$.data.products[0].quantity").value(2))
+				.andExpect(jsonPath("$.data.products[1].id").value(2))
+				.andExpect(jsonPath("$.data.products[1].quantity").value(3))
+				.andExpect(jsonPath("$.data.totalPrice").value(5000))
+				.andExpect(jsonPath("$.data.status").value("READY_FOR_DELIVERY"));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 재고 부족")
+	void t7() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "test@test.com",
+										             "address": "서울 어쩌구",
+										             "postcode": "12345"
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": 50
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("재고가 부족합니다. 남은 재고: 49"));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 회원 postcode 누락")
+	void t8() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "test@test.com",
+										             "address": "서울 어쩌구",
+										             "postcode": ""
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": 1
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("customer.postcode-NotBlank-우편번호는 필수 입력 항목입니다."));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 회원 email 누락")
+	void t9() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "",
+										             "address": "서울 어쩌구",
+										             "postcode": "12313"
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": 1
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("customer.email-NotBlank-이메일은 필수 입력 항목입니다."));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 회원 email 형식 오류")
+	void t10() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "adsasd.asdasd",
+										             "address": "서울 어쩌구",
+										             "postcode": "12313"
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": 1
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("customer.email-Email-올바른 이메일 주소를 입력해야 합니다."));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 주문 상품 없음")
+	void t11() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "test@test.com",
+										             "address": "서울 어쩌구",
+										             "postcode": "12313"
+										     },
+										     "products": [
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("products-Size-최소 한 개 이상이어야 합니다."));
+	}
+
+	@Test
+	@DisplayName("POST 주문 : 주문 수량 음수")
+	void t12() throws Exception {
+		ResultActions resultActions = mockMvc
+				.perform(
+						post("/api/order")
+								.content("""
+										{
+										     "customer": {
+										             "email": "test@test.com",
+										             "address": "서울 어쩌구",
+										             "postcode": "12313"
+										     },
+										     "products": [
+										         {
+										             "id": 1,
+										             "quantity": -1
+										         }
+										     ]
+										 }
+										""".stripIndent())
+								.contentType(
+										new MediaType(MediaType.APPLICATION_JSON, StandardCharsets.UTF_8))
+				)
+				.andDo(print());
+
+		resultActions
+				.andExpect(handler().handlerType(OrderController.class))
+				.andExpect(handler().methodName("createOrder"))
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value("products[0].quantity-Min-1개 이상 주문해야 합니다."));
 	}
 }

@@ -1,10 +1,15 @@
 package com.ll.coffeeBean.domain.order.dto;
 
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 
 @Getter
 public class PostDetailOrderDto {
-    private long id; // 상품 id
-    private String name; // 상품 이름
-    private int quantity; // 구매 수량
+    @NotNull
+    private Long id; // 상품 id
+
+    @Min(value = 1, message = "1개 이상 주문해야 합니다.")
+    @NotNull
+    private Integer quantity; // 구매 수량
 }
