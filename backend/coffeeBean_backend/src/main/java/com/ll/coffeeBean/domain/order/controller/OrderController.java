@@ -2,6 +2,8 @@ package com.ll.coffeeBean.domain.order.controller;
 
 import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
+import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
@@ -9,13 +11,12 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
 public class OrderController {
     private final OrderService orderService;
-
-
 
 	@PutMapping("/{orderId}")
 	RsData<PutRepAndResOrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
@@ -35,7 +36,6 @@ public class OrderController {
 		);
 	}
 
-
 	@DeleteMapping("/{orderId}")
 	RsData<Void> deleteOrder(@PathVariable(name = "orderId") long orderId) {
 
@@ -49,4 +49,15 @@ public class OrderController {
 				"200-1", "%d번 주문이 삭제되었습니다." .formatted(orderId));
 		}
 
+    @PostMapping
+    public RsData<PostOrderResponseDto> createOrder(@RequestBody @Valid PostOrderRequestDto request) {
+
+        PostOrderResponseDto response = orderService.createOrder(request);
+
+        return new RsData<>(
+                "201-1",
+                "주문이 완료되었습니다.",
+                response
+        );
+    }
 }
