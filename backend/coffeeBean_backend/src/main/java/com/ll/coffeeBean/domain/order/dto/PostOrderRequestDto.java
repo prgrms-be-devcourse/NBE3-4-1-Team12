@@ -15,4 +15,8 @@ public record PostOrderRequestDto (
         @NotNull(message = "상품 정보는 필수입니다.")
         @Size(min = 1, message = "최소 한 개 이상이어야 합니다.")
         List<@Valid PostDetailOrderDto> products // 상품 정보
+<<<<<<< HEAD
 ) { }
+=======
+) { }
+>>>>>>> 40814ec (refactor: dto recode로 변경)

@@ -10,4 +10,8 @@ public record PostDetailOrderDto(
         @Min(value = 1, message = "1개 이상 주문해야 합니다.")
         @NotNull
         Integer quantity // 구매 수량
+<<<<<<< HEAD
 ) { }
+=======
+) { }
+>>>>>>> 40814ec (refactor: dto recode로 변경)

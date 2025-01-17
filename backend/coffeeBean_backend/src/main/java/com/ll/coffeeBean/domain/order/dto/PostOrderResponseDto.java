@@ -11,4 +11,8 @@ public record PostOrderResponseDto (
         List<PostDetailOrderDto> products, // 상품 정보
         long totalPrice, // 총 금액
         String status // 주문 상태
+<<<<<<< HEAD
 ) { }
+=======
+) { }
+>>>>>>> 40814ec (refactor: dto recode로 변경)
