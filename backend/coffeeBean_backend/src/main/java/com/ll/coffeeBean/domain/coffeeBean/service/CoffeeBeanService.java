@@ -6,6 +6,8 @@ import com.ll.coffeeBean.global.exceptions.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 @RequiredArgsConstructor
 public class CoffeeBeanService {
@@ -38,6 +40,11 @@ public class CoffeeBeanService {
 	}
 
 	public CoffeeBean findByName(String name) {
-		return coffeeBeanRepository.findByName(name);
+		Optional<CoffeeBean> coffeeBeanOptional = coffeeBeanRepository.findByName(name);
+		if(coffeeBeanOptional.isPresent()){
+			return coffeeBeanOptional.get();
+		} else {
+			throw new ServiceException("404", "CoffeeBean을 찾을 수 없습니다.");
+		}
 	}
 }

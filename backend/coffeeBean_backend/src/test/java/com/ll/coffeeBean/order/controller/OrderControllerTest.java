@@ -8,7 +8,7 @@ import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.repository.DetailOrderRepository;
 import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
-import com.ll.coffeeBean.domain.siteUser.repository.UserRepository;
+import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.*;
@@ -39,7 +39,7 @@ class OrderControllerTest {
 	@Autowired
 	private MockMvc mockMvc;
 	@Autowired
-	private UserRepository userRepository;
+	private SiteUserRepository siteUserRepository;
 	@Autowired
 	private DetailOrderRepository detailOrderRepository;
 	@Autowired
@@ -57,7 +57,7 @@ class OrderControllerTest {
 		coffeeBeanRepository.deleteAll();
 		orderRepository.deleteAll();
 		detailOrderRepository.deleteAll();
-		userRepository.deleteAll();
+		siteUserRepository.deleteAll();
 
 		entityManager.createNativeQuery("ALTER TABLE coffee_bean ALTER COLUMN id RESTART WITH 1").executeUpdate();
 		entityManager.createNativeQuery("ALTER TABLE menu_order ALTER COLUMN id RESTART WITH 1").executeUpdate();
@@ -65,7 +65,7 @@ class OrderControllerTest {
 
 		SiteUser user1 = new SiteUser();
 		user1.setEmail("user1email@naver.com");
-		userRepository.save(user1);
+		siteUserRepository.save(user1);
 
 		MenuOrder order1 = new MenuOrder();
 		order1.setCustomer(user1);
