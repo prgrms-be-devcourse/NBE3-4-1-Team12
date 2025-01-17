@@ -9,7 +9,7 @@ import com.ll.coffeeBean.domain.order.repository.DetailOrderRepository;
 import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
-import com.ll.coffeeBean.domain.siteUser.repository.UserRepository;
+import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.domain.siteUser.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +28,7 @@ public class BaseInitData {
 	private final OrderService orderService;
 	private final OrderRepository orderRepository;
 	private final UserService userService;
-	private final UserRepository userRepository;
+	private final SiteUserRepository siteUserRepository;
 	private final DetailOrderRepository detailOrderRepository;
 	private final CoffeeBeanService coffeeBeanService;
 	private final CoffeeBeanRepository coffeeBeanRepository;
@@ -58,7 +58,7 @@ public class BaseInitData {
 		SiteUser user1 = new SiteUser();
 		if(userService.count() == 0) {
 			user1.setEmail("user1@naver.com");
-			userRepository.save(user1);
+			siteUserRepository.save(user1);
 		} else {
 			user1 = userService.findByEmail("user1@naver.com");
 		}
