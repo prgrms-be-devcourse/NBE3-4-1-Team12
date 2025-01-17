@@ -119,7 +119,7 @@ public class OrderService {
         pastOrderRepository.save(pastOrder);
 
         // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
-        order.getCustomer().removeMenu(order);
+        order.getCustomer().removeOrder(order);
     }
 
     public Optional<MenuOrder> findById(long id) {
@@ -146,7 +146,8 @@ public class OrderService {
             // 커피콩 주문 수량 변경
             if (beanIdQuantityDTO.getQuantity() == 0) {
                 // 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
-                menuOrder.getOrders().remove(beanOrderToChange);
+                menuOrder.removeDetail(beanOrderToChange);
+                detailOrderRepository.delete(beanOrderToChange);
             } else {
                 // 실제 수량 변경 로직
                 beanOrderToChange.setQuantity(beanIdQuantityDTO.getQuantity());

@@ -32,21 +32,21 @@ public class SiteUser extends BaseTime {
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
-    private List<MenuOrder> menu = new ArrayList<>();
+    private List<MenuOrder> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PastOrder> pastOrders;
 
-    public void addMenu(MenuOrder menu) {
-        this.menu.add(menu);
+    public void addOrder(MenuOrder menu) {
+        this.orders.add(menu);
         menu.setCustomer(this);
     }
 
-    public void removeMenu(MenuOrder menu) {
-        this.menu.remove(menu);
+    public void removeOrder(MenuOrder menu) {
+        this.orders.remove(menu);
     }
 
-    public void removePastOrders(PastOrder pastOrder) {
+    public void removePastOrder(PastOrder pastOrder) {
         this.pastOrders.remove(pastOrder);
     }
 }

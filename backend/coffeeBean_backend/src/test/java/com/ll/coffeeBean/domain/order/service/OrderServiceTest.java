@@ -3,6 +3,8 @@ package com.ll.coffeeBean.domain.order.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+import com.ll.coffeeBean.domain.order.dto.BeanIdQuantityDTO;
+import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -12,18 +14,18 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @ActiveProfiles("test")
-@EnableScheduling
 @Transactional
 class OrderServiceTest {
 
@@ -50,6 +52,9 @@ class OrderServiceTest {
     @DisplayName("데이터 입력 및 삭제, DB 반영 모두 확인하는 테스트")
     void test_insertAndDeleteData() {
         // given firstOrder
+        assertEquals(orderRepository.count(), 1);
+        assertEquals(detailOrderRepository.count(), 3);
+
         orderRepository.deleteAll();
         detailOrderRepository.deleteAll();
 
@@ -92,11 +97,10 @@ class OrderServiceTest {
                 .build());
 
         // customer.menu 에 menuOrder 추가
-        customer.addMenu(menuOrder);
+        customer.addOrder(menuOrder);
 
         // persist
         siteUserRepository.save(customer);
-        orderRepository.save(menuOrder);
 
         MenuOrder order = orderRepository.findById(2L).get();
         DetailOrder detailOrder = detailOrderRepository.findById(4L).get();
@@ -110,9 +114,9 @@ class OrderServiceTest {
         assertEquals(detailOrder.getOrder().getOrders().size(), 3);
         assertEquals(detailOrder.getOrder().getOrders().get(2).getName(), "ice tea");
         assertEquals(detailOrder.getOrder().getCustomer().getEmail(), customer.getEmail());
-        assertEquals(detailOrder.getOrder().getCustomer().getMenu().size(), 1);
-        assertEquals(detailOrder.getOrder().getCustomer().getMenu().get(0).getOrders().size(), 3);
-        assertEquals(detailOrder.getOrder().getCustomer().getMenu().get(0).getOrders().get(0).getName(), "americano");
+        assertEquals(detailOrder.getOrder().getCustomer().getOrders().size(), 1);
+        assertEquals(detailOrder.getOrder().getCustomer().getOrders().get(0).getOrders().size(), 3);
+        assertEquals(detailOrder.getOrder().getCustomer().getOrders().get(0).getOrders().get(0).getName(), "americano");
         assertNull(detailOrder.getPastOrder());
         assertEquals(pastOrderRepository.count(), 0L);
 
@@ -170,7 +174,7 @@ class OrderServiceTest {
                 .order(menuOrder)
                 .build());
 
-        customer.addMenu(menuOrder);
+        customer.addOrder(menuOrder);
         siteUserRepository.save(customer);
         orderRepository.save(menuOrder);
 
@@ -186,9 +190,9 @@ class OrderServiceTest {
         assertEquals(newDetailOrder.getOrder().getOrders().size(), 3);
         assertEquals(newDetailOrder.getOrder().getOrders().get(2).getName(), "ice mocha");
         assertEquals(newDetailOrder.getOrder().getCustomer().getEmail(), customer.getEmail());
-        assertEquals(newDetailOrder.getOrder().getCustomer().getMenu().size(), 1);
-        assertEquals(newDetailOrder.getOrder().getCustomer().getMenu().get(0).getOrders().size(), 3);
-        assertEquals(newDetailOrder.getOrder().getCustomer().getMenu().get(0).getOrders().get(0).getName(),
+        assertEquals(newDetailOrder.getOrder().getCustomer().getOrders().size(), 1);
+        assertEquals(newDetailOrder.getOrder().getCustomer().getOrders().get(0).getOrders().size(), 3);
+        assertEquals(newDetailOrder.getOrder().getCustomer().getOrders().get(0).getOrders().get(0).getName(),
                 "ice choco");
         assertNull(newDetailOrder.getPastOrder());
         assertEquals(pastOrderRepository.count(), 1L);
@@ -210,5 +214,63 @@ class OrderServiceTest {
         assertEquals(pastOrder.getOrders().size(), 3);
         assertEquals(pastOrder.getOrders().get(0).getName(), "ice choco");
         assertEquals(pastOrder.getOrderStatus(), OrderStatus.DELIVERED);
+    }
+
+    @Test
+    @DisplayName("delete - DB reflection 확인")
+    void test_deleteAll() {
+        assertEquals(orderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+        assertEquals(siteUserRepository.count(), 1L);
+
+        List<MenuOrder> orders = orderRepository.findAllById(1L);
+
+        for (MenuOrder order : orders) {
+            order.getCustomer().removeOrder(order);
+        }
+
+        SiteUser user = siteUserRepository.findById(1L).get();
+
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(detailOrderRepository.count(), 0L);
+        assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getOrders().size(), 0);
+    }
+
+    @Test
+    @DisplayName("modify, delete - 변경 개수 0개")
+    void test_modifyAndDeleteDetailOrder() {
+        MenuOrder menuOrder = orderRepository.findById(1L).get();
+        assertEquals(menuOrder.getCustomer().getEmail(), "user1@naver.com");
+        assertEquals(menuOrder.getOrders().get(2).getName(), "bean3");
+
+        List<BeanIdQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
+        BeanIdQuantityDTO beanId1 = new BeanIdQuantityDTO(1L, 1);
+        BeanIdQuantityDTO beanId2 = new BeanIdQuantityDTO(2L, 2);
+        BeanIdQuantityDTO beanId3 = new BeanIdQuantityDTO(3L, 0);
+        beanIdQuantityDTOS.add(beanId1);
+        beanIdQuantityDTOS.add(beanId2);
+        beanIdQuantityDTOS.add(beanId3);
+
+        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        orderService.modify(menuOrder, putMenuOrderRqDTO);
+
+        assertEquals(orderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 2L);
+        assertEquals(menuOrder.getOrders().size(), 2);
+
+        menuOrder = orderRepository.findById(1L).get();
+
+        beanIdQuantityDTOS = new ArrayList<>();
+        beanId1 = new BeanIdQuantityDTO(1L, 0);
+        beanIdQuantityDTOS.add(beanId1);
+        beanIdQuantityDTOS.add(beanId2);
+
+        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        orderService.modify(menuOrder, putMenuOrderRqDTO);
+
+        assertEquals(orderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 1L);
+        assertEquals(menuOrder.getOrders().size(), 1);
     }
 }
