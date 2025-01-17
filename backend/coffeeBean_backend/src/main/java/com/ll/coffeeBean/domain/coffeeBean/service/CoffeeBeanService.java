@@ -42,12 +42,11 @@ public class CoffeeBeanService {
 
 	public CoffeeBeanResponseDTO createCoffeeBean(CoffeeBeanRequestDTO reqBody) {
 
-		/*
+
 		if (coffeeBeanRepository.existsByName(reqBody.getName())) {
 			throw new ServiceException("400-1", "이미 존재하는 원두입니다.");
 		}
 
-		 */
 
 		CoffeeBean coffeeBean = new CoffeeBean(reqBody.getName(), reqBody.getPrice(), reqBody.getQuantity());
 		coffeeBeanRepository.save(coffeeBean);
@@ -57,8 +56,7 @@ public class CoffeeBeanService {
 	}
 
 
-	public CoffeeBeanResponseDTO modifyCoffeeBean(long id, Integer price, Integer quantity) {
-		CoffeeBean coffeeBean = findById(id);
+	public CoffeeBeanResponseDTO modifyCoffeeBean(CoffeeBean coffeeBean, Integer price, Integer quantity) {
 
 		coffeeBean.setPrice(price);
 

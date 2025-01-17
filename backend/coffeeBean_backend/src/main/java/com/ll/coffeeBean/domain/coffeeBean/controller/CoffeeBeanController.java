@@ -18,9 +18,8 @@ public class CoffeeBeanController {
 
 	private final CoffeeBeanService CoffeeBeanService;
 
-
 	@PostMapping
-	public RsData<CoffeeBeanResponseDTO> createCoffeebean(@Valid @RequestBody
+	public RsData<CoffeeBeanResponseDTO> createCoffeeBean(@Valid @RequestBody
 															  CoffeeBeanRequestDTO reqBody) {
 
 		CoffeeBeanResponseDTO response = CoffeeBeanService.createCoffeeBean(reqBody);
@@ -40,31 +39,19 @@ public class CoffeeBeanController {
 			Integer quantity
 	){}
 
-	record UpdateCoffeeBeanResponse(
-			Long id,
-			String name,
-			Integer price,
-			Integer quantity
-	){}
-
-
-
 	@PutMapping("/{id}")
-	public RsData<UpdateCoffeeBeanResponse> modifyCoffeeBean(@PathVariable(name = "id") long id,
+	public RsData<CoffeeBeanResponseDTO> modifyCoffeeBean(@PathVariable(name = "id") long id,
 															 @RequestBody @Valid UpdateCoffeeBeanRequest reqBody) {
 
 		CoffeeBean coffeeBean = CoffeeBeanService.findById(id);
-		CoffeeBeanResponseDTO response = CoffeeBeanService.modifyCoffeeBean(id, reqBody.price, reqBody.quantity);
-
+		CoffeeBeanResponseDTO response = CoffeeBeanService.modifyCoffeeBean(coffeeBean, reqBody.price, reqBody.quantity);
 
 		return new RsData<>(
 				"200-1",
-				"원두가 수정되었습니다."
-
-
+				"원두가 수정되었습니다.",
+				response
 		);
-
 	}
 
-
+	// DELETE 요청은 일단은 처리하지 않기로
 }
