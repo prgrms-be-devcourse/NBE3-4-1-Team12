@@ -1,4 +1,4 @@
-package com.ll.coffeeBean.order.controller;
+package com.ll.coffeeBean.domain.order.controller;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
