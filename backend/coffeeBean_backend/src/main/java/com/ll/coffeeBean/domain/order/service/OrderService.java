@@ -181,18 +181,18 @@ public class OrderService {
     @Transactional
     public PostOrderResponseDto createOrder(PostOrderRequestDto request) {
         // 회원 정보 확인 및 업데이트
-        SiteUser customer = siteUserRepository.findByEmail(request.getCustomer().getEmail())
+        SiteUser customer = siteUserRepository.findByEmail(request.customer().getEmail())
                 .orElseGet(() -> {
                     SiteUser newCustomer = SiteUser
                             .builder()
-                            .email(request.getCustomer().getEmail())
+                            .email(request.customer().getEmail())
                             .build();
                     return siteUserRepository.save(newCustomer); // 새로운 고객 저장
                 });
 
         // 주소 갱신
-        customer.setAddress(request.getCustomer().getAddress());
-        customer.setPostCode(request.getCustomer().getPostcode());
+        customer.setAddress(request.customer().getAddress());
+        customer.setPostCode(request.customer().getPostcode());
 
         // 주문 생성
         MenuOrder menuOrder = MenuOrder
@@ -204,13 +204,13 @@ public class OrderService {
         int totalPrice = 0;
         List<DetailOrder> detailOrders = new ArrayList<>();
 
-        for (PostDetailOrderDto product : request.getProducts()) {
+        for (PostDetailOrderDto product : request.products()) {
             // CoffeeBean 조회
-            CoffeeBean coffeeBean = coffeeBeanRepository.findById(product.getId())
+            CoffeeBean coffeeBean = coffeeBeanRepository.findById(product.id())
                     .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
 
             // 재고 확인 및 차감
-            coffeeBeanService.reduceStockWithValidation(coffeeBean, product.getQuantity());
+            coffeeBeanService.reduceStockWithValidation(coffeeBean, product.quantity());
             coffeeBeanRepository.save(coffeeBean); // 변경된 재고 저장
 
             // DetailOrder 생성 및 추가
@@ -218,12 +218,12 @@ public class OrderService {
                     .builder()
                     .name(coffeeBean.getName())
                     .price(coffeeBean.getPrice())
-                    .quantity(product.getQuantity())
+                    .quantity(product.quantity())
                     .order(menuOrder)
                     .build();
             detailOrders.add(detailOrder);
 
-            totalPrice += coffeeBean.getPrice() * product.getQuantity();
+            totalPrice += coffeeBean.getPrice() * product.quantity();
         }
 
         // 주문 저장
@@ -232,8 +232,8 @@ public class OrderService {
 
         // 응답 생성
         return new PostOrderResponseDto(menuOrder.getId(),
-                request.getCustomer(),
-                request.getProducts(),
+                request.customer(),
+                request.products(),
                 totalPrice,
                 menuOrder.getOrderStatus().toString());
     }

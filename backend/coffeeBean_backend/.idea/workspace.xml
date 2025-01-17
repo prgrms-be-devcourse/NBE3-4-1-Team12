@@ -290,7 +290,7 @@
                   <entry key="branch">
                     <value>
                       <list>
-                        <option value="origin/main" />
+                        <option value="feature/order" />
                       </list>
                     </value>
                   </entry>
