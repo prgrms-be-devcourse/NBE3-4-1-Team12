@@ -1,10 +1,9 @@
 package com.ll.coffeeBean.domain.order.service;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
+import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
-import com.ll.coffeeBean.domain.order.dto.PutRepAndResDetailOrderDTO;
-import com.ll.coffeeBean.domain.order.dto.PutRepAndResOrderRqDTO;
-import com.ll.coffeeBean.domain.order.dto.ProcessOrderDto;
+import com.ll.coffeeBean.domain.order.dto.*;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -12,14 +11,18 @@ import com.ll.coffeeBean.domain.order.enums.OrderStatus;
 import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
+import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
 
 @Service
 @RequiredArgsConstructor
@@ -27,6 +30,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final PastOrderRepository pastOrderRepository;
 	private final CoffeeBeanService coffeeBeanService;
+    private final SiteUserRepository siteUserRepository;
+    private final CoffeeBeanRepository coffeeBeanRepository;
 
     /**
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
@@ -90,7 +95,6 @@ public class OrderService {
                     .build());
         }
     }
-
 
 
 	public long count() {
@@ -173,4 +177,64 @@ public class OrderService {
 	public void deleteOrder(MenuOrder menuOrder) {
 		orderRepository.delete(menuOrder);
 	}
+
+    @Transactional
+    public PostOrderResponseDto createOrder(PostOrderRequestDto request) {
+        // 회원 정보 확인 및 업데이트
+        SiteUser customer = siteUserRepository.findByEmail(request.customer().getEmail())
+                .orElseGet(() -> {
+                    SiteUser newCustomer = SiteUser
+                            .builder()
+                            .email(request.customer().getEmail())
+                            .build();
+                    return siteUserRepository.save(newCustomer); // 새로운 고객 저장
+                });
+
+        // 주소 갱신
+        customer.setAddress(request.customer().getAddress());
+        customer.setPostCode(request.customer().getPostcode());
+
+        // 주문 생성
+        MenuOrder menuOrder = MenuOrder
+                .builder()
+                .orderStatus(READY_FOR_DELIVERY)
+                .customer(customer)
+                .build();
+
+        int totalPrice = 0;
+        List<DetailOrder> detailOrders = new ArrayList<>();
+
+        for (PostDetailOrderDto product : request.products()) {
+            // CoffeeBean 조회
+            CoffeeBean coffeeBean = coffeeBeanRepository.findById(product.id())
+                    .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
+
+            // 재고 확인 및 차감
+            coffeeBeanService.reduceStockWithValidation(coffeeBean, product.quantity());
+            coffeeBeanRepository.save(coffeeBean); // 변경된 재고 저장
+
+            // DetailOrder 생성 및 추가
+            DetailOrder detailOrder = DetailOrder
+                    .builder()
+                    .name(coffeeBean.getName())
+                    .price(coffeeBean.getPrice())
+                    .quantity(product.quantity())
+                    .order(menuOrder)
+                    .build();
+            detailOrders.add(detailOrder);
+
+            totalPrice += coffeeBean.getPrice() * product.quantity();
+        }
+
+        // 주문 저장
+        menuOrder.setOrders(detailOrders);
+        orderRepository.save(menuOrder);
+
+        // 응답 생성
+        return new PostOrderResponseDto(menuOrder.getId(),
+                request.customer(),
+                request.products(),
+                totalPrice,
+                menuOrder.getOrderStatus().toString());
+    }
 }
