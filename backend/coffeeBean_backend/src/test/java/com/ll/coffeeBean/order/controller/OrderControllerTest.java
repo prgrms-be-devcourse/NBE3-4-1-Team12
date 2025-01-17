@@ -183,9 +183,9 @@ class OrderControllerTest {
 		resultActions
 				.andExpect(handler().handlerType(OrderController.class))
 				.andExpect(handler().methodName("modifyOrder"))
-				.andExpect(status().isConflict())
-				.andExpect(jsonPath("$.resultCode").value("409"))
-				.andExpect(jsonPath("$.msg").value("재고가 부족합니다.ㅜㅜㅜ"));
+				.andExpect(status().isBadRequest())
+				.andExpect(jsonPath("$.resultCode").value("400-1"))
+				.andExpect(jsonPath("$.msg").value(matchesPattern(".*재고가 부족합니다.*")));
 	}
 
 	@Test

@@ -30,11 +30,14 @@ public class CoffeeBeanService {
     }
 
 	// 재고
-	public void reduceStockWithValidation(CoffeeBean coffeeBean, int orderQuantity) {
+	public void changeStockWithValidation(CoffeeBean coffeeBean, int orderQuantity) {
 		if (coffeeBean.getQuantity() < orderQuantity) {
 			throw new ServiceException("400-1", "재고가 부족합니다. 남은 재고: " + coffeeBean.getQuantity());
 		}
-
 		coffeeBean.setQuantity(coffeeBean.getQuantity() - orderQuantity);
+	}
+
+	public CoffeeBean findByName(String name) {
+		return coffeeBeanRepository.findByName(name);
 	}
 }

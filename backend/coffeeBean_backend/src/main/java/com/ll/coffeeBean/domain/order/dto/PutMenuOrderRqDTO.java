@@ -8,8 +8,8 @@ import java.util.List;
 
 @Getter
 @Setter
-public class PutRepAndResOrderRqDTO {
+public class PutMenuOrderRqDTO {
 
 	@Valid
-	private List<PutRepAndResDetailOrderDTO> coffeeOrders;
+	private List<BeanIdQuantityDTO> coffeeOrders;
 }
