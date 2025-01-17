@@ -44,6 +44,7 @@ public class OrderController {
 
 		orderService.deleteOrder(menuOrder);
 
+
 		return new RsData<> (
 				"200-1", "%d번 주문이 삭제되었습니다." .formatted(orderId));
 		}
