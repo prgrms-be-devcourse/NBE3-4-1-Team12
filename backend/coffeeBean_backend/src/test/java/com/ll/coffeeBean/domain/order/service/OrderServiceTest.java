@@ -217,12 +217,14 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("delete - DB reflection 확인")
-    void test_deleteAll() {
+    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder도 함께 삭제")
+    void test_deleteMenuOrderAliveDetailOrderFailed() {
+        // given
         assertEquals(orderRepository.count(), 1L);
         assertEquals(detailOrderRepository.count(), 3L);
         assertEquals(siteUserRepository.count(), 1L);
 
+        // when
         List<MenuOrder> orders = orderRepository.findAllById(1L);
 
         for (MenuOrder order : orders) {
@@ -231,10 +233,28 @@ class OrderServiceTest {
 
         SiteUser user = siteUserRepository.findById(1L).get();
 
+        // then
         assertEquals(orderRepository.count(), 0L);
         assertEquals(detailOrderRepository.count(), 0L);
         assertEquals(siteUserRepository.count(), 1L);
         assertEquals(user.getOrders().size(), 0);
+    }
+
+    @Test
+    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder 는 살아있는지 init 데이터로 확인")
+    void test_deleteMenuOrderAliveDetailOrderSuccess() {
+        // given
+        assertEquals(orderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+        assertEquals(siteUserRepository.count(), 1L);
+
+        // when
+        orderService.processOrderByScheduled();
+
+        // then
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(detailOrderRepository.count(), 3L);
+        assertEquals(siteUserRepository.count(), 1L);
     }
 
     @Test

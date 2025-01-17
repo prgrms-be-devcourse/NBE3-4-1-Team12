@@ -25,7 +25,7 @@ import lombok.Setter;
 @Builder
 public class MenuOrder extends BaseTime {
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     @Builder.Default
     private List<DetailOrder> orders = new ArrayList<>();
 

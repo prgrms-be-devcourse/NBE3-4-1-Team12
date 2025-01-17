@@ -89,7 +89,7 @@ public class BaseInitData {
 
             user1.addOrder(order1);
 
-            // User -> MenuOrder -> DetailOrder 순으로 각각 DB에 저장된다! (연관관계로 인함)
+            // 연관관계로 인해 얽혀있는 3개의 엔티티가 모두 저장!
             siteUserRepository.save(user1);
 
 //			DetailOrder bean1 = DetailOrder.builder()
