@@ -171,6 +171,13 @@ public class OrderService {
 	}
 
 	public void deleteOrder(MenuOrder menuOrder) {
+		// 주문 취소시 각 커피콩 재고에 취소된 수량 추가 (복구)
+		for(DetailOrder detailOrder : menuOrder.getOrders()){
+			PutRepAndResDetailOrderDTO putRepAndResDetailOrderDTO = new PutRepAndResDetailOrderDTO(detailOrder.getId(), detailOrder.getQuantity());
+			CoffeeBean coffeeBean = coffeeBeanService.findById(putRepAndResDetailOrderDTO.getId());
+			coffeeBean.setQuantity(coffeeBean.getQuantity() + putRepAndResDetailOrderDTO.getQuantity());
+		}
+		// 주문 취소
 		orderRepository.delete(menuOrder);
 	}
 }
