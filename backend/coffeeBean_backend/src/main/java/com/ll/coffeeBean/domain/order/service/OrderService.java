@@ -14,7 +14,11 @@ import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
+import com.ll.coffeeBean.standard.PageDto.PageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +37,36 @@ public class OrderService {
 	private final CoffeeBeanService coffeeBeanService;
     private final SiteUserRepository siteUserRepository;
     private final CoffeeBeanRepository coffeeBeanRepository;
+
+
+    public long count() {
+        return orderRepository.count();
+    }
+
+
+    //pageable 설정 후 jpa를 유저 정보와 pageable를 이용해 page 데이터 탐색
+    public PageDto<GetResMenuOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<MenuOrder> paging= this.orderRepository.findByCustomer(pageable,siteUser);
+
+        Page<GetResMenuOrderDto> pagingOrderDto=paging.map(GetResMenuOrderDto::new);
+        PageDto<GetResMenuOrderDto> pageDto=new PageDto<>(pagingOrderDto);
+        return pageDto;
+
+    }
+
+    @Transactional
+    public MenuOrder create(SiteUser siteUser) {
+
+        MenuOrder menuOrder=new MenuOrder();
+        menuOrder.setCustomer(siteUser);
+        orderRepository.save(menuOrder);
+
+        return menuOrder;
+    }
+
+
 
     /**
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
@@ -97,10 +131,6 @@ public class OrderService {
         }
     }
 
-
-	public long count() {
-		return orderRepository.count();
-	}
 
 	public Optional<MenuOrder> findById(long id) {
         return orderRepository.findById(id);
