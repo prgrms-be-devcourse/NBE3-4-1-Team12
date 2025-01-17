@@ -19,9 +19,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
@@ -67,18 +64,36 @@ public class BaseInitData {
 			MenuOrder order1 = new MenuOrder();
 			order1.setCustomer(user1);
 
-			DetailOrder bean1 = new DetailOrder("bean1", 1, 1000, order1);
-			detailOrderRepository.save(bean1);
-			DetailOrder bean2 = new DetailOrder("bean2", 2, 1000, order1);
-			detailOrderRepository.save(bean2);
-			DetailOrder bean3 = new DetailOrder("bean3", 3, 1000, order1);
-			detailOrderRepository.save(bean3);
+			DetailOrder bean1 = DetailOrder.builder()
+                    .name("bean1")
+                    .quantity(1)
+                    .price(1000)
+                    .build();
+            order1.addDetail(bean1);
+//			detailOrderRepository.save(bean1);
 
-			List<DetailOrder> orderList = new ArrayList<>();
-			orderList.add(bean1);
-			orderList.add(bean2);
-			orderList.add(bean3);
-			order1.setOrders(orderList);
+            DetailOrder bean2 = DetailOrder.builder()
+                    .name("bean2")
+                    .quantity(1)
+                    .price(1000)
+                    .build();
+            order1.addDetail(bean2);
+//			detailOrderRepository.save(bean2);
+
+            DetailOrder bean3 = DetailOrder.builder()
+                    .name("bean2")
+                    .quantity(1)
+                    .price(1000)
+                    .build();
+
+            order1.addDetail(bean3);
+//			detailOrderRepository.save(bean3);
+
+//			List<DetailOrder> orderList = new ArrayList<>();
+//			orderList.add(bean1);
+//			orderList.add(bean2);
+//			orderList.add(bean3);
+//			order1.setOrders(orderList);
 
 			orderRepository.save(order1);
 		}

@@ -45,4 +45,8 @@ public class SiteUser extends BaseTime {
     public void removeMenu(MenuOrder menu) {
         this.menu.remove(menu);
     }
+
+    public void removePastOrders(PastOrder pastOrder) {
+        this.pastOrders.remove(pastOrder);
+    }
 }

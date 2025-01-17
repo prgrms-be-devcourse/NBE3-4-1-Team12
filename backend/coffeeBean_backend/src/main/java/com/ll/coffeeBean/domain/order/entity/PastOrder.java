@@ -24,6 +24,7 @@ import lombok.Setter;
 @Setter
 @Builder
 public class PastOrder extends BaseTime {
+
     @OneToMany(mappedBy = "pastOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<DetailOrder> orders = new ArrayList<>();
@@ -33,4 +34,9 @@ public class PastOrder extends BaseTime {
 
     @Column
     private OrderStatus orderStatus;
+
+    public void addDetail(DetailOrder detailOrder) {
+        detailOrder.setPastOrder(this);
+        orders.add(detailOrder);
+    }
 }
