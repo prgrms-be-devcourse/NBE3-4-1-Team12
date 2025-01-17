@@ -175,6 +175,16 @@ public class OrderService {
     }
 
     @Transactional
+    public void deleteOrder(MenuOrder menuOrder) {
+        // 커피콩 재고 수량 초기화 (주문 취소)
+        for (DetailOrder detailOrder : menuOrder.getOrders()) {
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(detailOrder.getName());
+            coffeeBeanService.changeStockWithValidation(coffeeBean, -detailOrder.getQuantity());
+        }
+        orderRepository.delete(menuOrder);
+    }
+
+    @Transactional
     public PostOrderResponseDto createOrder(PostOrderRequestDto request) {
         // 회원 정보 확인 및 업데이트
         SiteUser customer = siteUserRepository.findByEmail(request.customer().getEmail())
