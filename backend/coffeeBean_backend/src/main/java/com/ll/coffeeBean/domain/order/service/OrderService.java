@@ -13,7 +13,11 @@ import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
+import com.ll.coffeeBean.standard.PageDto.PageDto;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,161 +31,154 @@ import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVER
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-	private final OrderRepository orderRepository;
-	private final PastOrderRepository pastOrderRepository;
+    private final OrderRepository orderRepository;
+    private final PastOrderRepository pastOrderRepository;
 	private final CoffeeBeanService coffeeBeanService;
     private final SiteUserRepository siteUserRepository;
     private final CoffeeBeanRepository coffeeBeanRepository;
 
-	/**
-	 * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
-	 * What : 어차피 매일 14시에 실행되는데, 굳이 atTime 까지 쓸 필요가 있는가
-	 */
-	public void processOrderByScheduled() {
-		System.out.println("========================");
-		System.out.println("Start Scheduled!!\n\n");
+
+    public long count() {
+        return orderRepository.count();
+    }
+
+
+    //pageable 설정 후 jpa를 유저 정보와 pageable를 이용해 page 데이터 탐색
+    public PageDto<GetResMenuOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        Page<MenuOrder> paging= this.orderRepository.findByCustomer(pageable,siteUser);
+
+        Page<GetResMenuOrderDto> pagingOrderDto=paging.map(GetResMenuOrderDto::new);
+        PageDto<GetResMenuOrderDto> pageDto=new PageDto<>(pagingOrderDto);
+        return pageDto;
+
+    }
+
+    @Transactional
+    public MenuOrder create(SiteUser siteUser) {
+
+        MenuOrder menuOrder=new MenuOrder();
+        menuOrder.setCustomer(siteUser);
+        orderRepository.save(menuOrder);
+
+        return menuOrder;
+    }
+
+
+
+    /**
+     * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
+     * What : 어차피 매일 14시에 실행되는데, 굳이 atTime 까지 쓸 필요가 있는가
+     */
+    public void processOrderByScheduled() {
+        System.out.println("========================");
+        System.out.println("Start Scheduled!!\n\n");
 
 //        LocalDateTime endDate = LocalDateTime.now().toLocalDate().atTime(14, 0);
-		LocalDateTime endDate = LocalDateTime.now();
-		LocalDateTime startDate = endDate.minusDays(1);
+        LocalDateTime endDate = LocalDateTime.now();
+        LocalDateTime startDate = endDate.minusDays(1);
 
-		List<MenuOrder> orders = orderRepository.findByCreateDateGreaterThanEqualAndCreateDateBefore(startDate, endDate);
+        List<MenuOrder> orders = orderRepository.findByCreateDateGreaterThanEqualAndCreateDateBefore(startDate, endDate);
 
-		for (MenuOrder order : orders) {
-			List<DetailOrder> detailOrders = order.getOrders();
-			List<ProcessOrderDto> orderDtos = new ArrayList<>();
-			int totalPrice = 0;
+        for (MenuOrder order : orders) {
+            List<DetailOrder> detailOrders = order.getOrders();
+            List<ProcessOrderDto> orderDtos = new ArrayList<>();
+            int totalPrice = 0;
 
-			for (DetailOrder detailOrder : detailOrders) {
-				int menuTotalPrice = detailOrder.getPrice() * detailOrder.getQuantity();    // 메뉴별 총액
-				totalPrice += menuTotalPrice;
+            for (DetailOrder detailOrder : detailOrders) {
+                int menuTotalPrice = detailOrder.getPrice() * detailOrder.getQuantity();    // 메뉴별 총액
+                totalPrice += menuTotalPrice;
 
-				orderDtos.add(ProcessOrderDto.builder()
-						.name(detailOrder.getName())
-						.quantity(detailOrder.getQuantity())
-						.price(detailOrder.getPrice())
-						.menuTotalPrice(menuTotalPrice)
-						.build());
-			}
+                orderDtos.add(ProcessOrderDto.builder()
+                        .name(detailOrder.getName())
+                        .quantity(detailOrder.getQuantity())
+                        .price(detailOrder.getPrice())
+                        .menuTotalPrice(menuTotalPrice)
+                        .build());
+            }
 
-			processOrder(orderDtos, order.getCustomer(), totalPrice);
-		}
+            processOrder(orderDtos, order.getCustomer(), totalPrice);
+        }
 
-		// 모든 작업 처리 후, 기존의 Order DB 모두 삭제
-		orderRepository.deleteAll(orders);
+        // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
+        orderRepository.deleteAll(orders);
 
-		System.out.println("\n\n========================");
-		System.out.println("End Scheduled!!\n\n");
-	}
+        System.out.println("\n\n========================");
+        System.out.println("End Scheduled!!\n\n");
+    }
 
-	/**
-	 * 주문 처리 (추후 구현) 처리 방법 정의 후 구현 예정
-	 */
-	public void processOrder(List<ProcessOrderDto> processOrderDtos, SiteUser customer, int totalPrice) {
-		/**
-		 * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
-		 */
+    /**
+     * 주문 처리 (추후 구현) 처리 방법 정의 후 구현 예정
+     */
+    public void processOrder(List<ProcessOrderDto> processOrderDtos, SiteUser customer, int totalPrice) {
+        /**
+         * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
+         */
 
-		// 처리된 작업은 지난 주문 DB에 저장
-		for (ProcessOrderDto processOrderDto : processOrderDtos) {
-			pastOrderRepository.save(PastOrder.builder()
-					.name(processOrderDto.getName())
-					.price(processOrderDto.getPrice())
-					.menuTotalPrice(processOrderDto.getMenuTotalPrice())
-					.totalPrice(totalPrice)
-					.quantity(processOrderDto.getQuantity())
-					.customer(customer)
-					.orderStatus(OrderStatus.DELIVERED)
-					.build());
-		}
-	}
+        // 처리된 작업은 지난 주문 DB에 저장
+        for (ProcessOrderDto processOrderDto : processOrderDtos) {
+            pastOrderRepository.save(PastOrder.builder()
+                    .name(processOrderDto.getName())
+                    .price(processOrderDto.getPrice())
+                    .menuTotalPrice(processOrderDto.getMenuTotalPrice())
+                    .totalPrice(totalPrice)
+                    .quantity(processOrderDto.getQuantity())
+                    .customer(customer)
+                    .orderStatus(OrderStatus.DELIVERED)
+                    .build());
+        }
+    }
 
-	public long count() {
-		return orderRepository.count();
-	}
 
 	public Optional<MenuOrder> findById(long id) {
-		Optional<MenuOrder> order = orderRepository.findById(id);
-
-		return order;
-	}
-
-	// 주문 수량과 재고 관련 로직
-	// 주문 수정 로직용, 다른 곳에서 사용하려면 수정 필요
-	public void checkStockQuantity(PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto, DetailOrder beanOrderToChange) {
-
-		CoffeeBean coffeeBean = coffeeBeanService.findById(putRepAndResDetailOrderDto.getId());
-
-		// 변경되어야 하는 수량 : 신규 수량 - 기존 수량
-		int changeQuantity = putRepAndResDetailOrderDto.getQuantity() - beanOrderToChange.getQuantity(); // 변경되는 수량
-
-		// 재고가 있는지 확인
-		if (coffeeBean.getQuantity() - changeQuantity < 0) {
-			// 그건 안됨! 오류 뿜기
-			throw new ServiceException("409", "재고가 부족합니다.ㅜㅜㅜ");
-		} else {
-			// 재고 변경
-			coffeeBean.setQuantity(coffeeBean.getQuantity() - changeQuantity);
-		}
-
-		System.out.println("변경된 재고 : " + coffeeBean.getQuantity() + " / 재고가 %d 만큼 변경되었습니다.".formatted(changeQuantity));
+        return orderRepository.findById(id);
 	}
 
 	// 주문 수정 비즈니스 로직 (MenuOrder 안에 있는 DetailOrder 수정)
-	// MenuOrder : 고객의 주문 정보
-	// DetailOrder : 각 커피콩 별 주문
-	// OrderReqDTO : DetailOrderDTO 리스트 담겨있음
-	// DetailOrderDTO : DetailOrder 와 유사. id 와 quantity 만 있음
-	public PutRepAndResOrderRqDTO modify(MenuOrder menuOrder, PutRepAndResOrderRqDTO reqBody) {
+    @Transactional
+	public PutMenuOrderRqDTO modify(MenuOrder menuOrder, PutMenuOrderRqDTO reqDetailOrders) {
 		// reqBody 에 담겨있는 주문 목록 받기
-		List<PutRepAndResDetailOrderDTO> orderDTOList = reqBody.getCoffeeOrders();
+		List<BeanIdQuantityDTO> beansDTOList = reqDetailOrders.getCoffeeOrders();
 
 		// 받아온 주문들의 각 커피콩 별 주문 처리
-		for (PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto : orderDTOList) {
+		for(BeanIdQuantityDTO beanIdQuantityDTO : beansDTOList){
 			// 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
 			DetailOrder beanOrderToChange = menuOrder.getOrders()
 					.stream()
-					.filter(beanOrder -> beanOrder.getId().equals(putRepAndResDetailOrderDto.getId()))
+					.filter(beanOrder -> beanOrder.getId().equals(beanIdQuantityDTO.getId()))
 					.findFirst().get();
-
 			// 재고관련 확인 및 처리
-			checkStockQuantity(putRepAndResDetailOrderDto, beanOrderToChange);
-
+            CoffeeBean coffeeBean = coffeeBeanService.findById(beanIdQuantityDTO.getId());
+            int changeQuantity =  beanIdQuantityDTO.getQuantity() - beanOrderToChange.getQuantity(); // 신규 - 기존
+			coffeeBeanService.changeStockWithValidation(coffeeBean, changeQuantity);
 			// 커피콩 주문 수량 변경
-			if (putRepAndResDetailOrderDto.getQuantity() == 0) {
+			if(beanIdQuantityDTO.getQuantity() == 0) {
 				// 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
 				menuOrder.getOrders().remove(beanOrderToChange);
 			} else {
 				// 실제 수량 변경 로직
-				beanOrderToChange.setQuantity(putRepAndResDetailOrderDto.getQuantity());
+				beanOrderToChange.setQuantity(beanIdQuantityDTO.getQuantity());
 			}
 		}
-
-		// DTO 에 담기 위한 작업들
-		// DetailOrder 에는 id 와 수량 외에도 가격 등 필요 없는 부분들 많음
-		List<PutRepAndResDetailOrderDTO> putRepAndResDetailOrderDTOList = new ArrayList<>();
-		for (DetailOrder beanOrders : menuOrder.getOrders()) {
-			PutRepAndResDetailOrderDTO putRepAndResDetailOrderDto = new PutRepAndResDetailOrderDTO();
-			putRepAndResDetailOrderDto.setId(beanOrders.getId());
-			putRepAndResDetailOrderDto.setQuantity(beanOrders.getQuantity());
-			putRepAndResDetailOrderDTOList.add(putRepAndResDetailOrderDto);
+		// 고객의 현재 주문 상태 DTO 에 담아 반환
+		List<BeanIdQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
+		for(DetailOrder beanOrders : menuOrder.getOrders()) {
+			BeanIdQuantityDTO beanIdQuantityDto = new BeanIdQuantityDTO(beanOrders.getId(), beanOrders.getQuantity());
+			beanIdQuantityDTOList.add(beanIdQuantityDto);
 		}
-
-		PutRepAndResOrderRqDTO orderReqDTO = new PutRepAndResOrderRqDTO();
-		orderReqDTO.setCoffeeOrders(putRepAndResDetailOrderDTOList);
-
+		PutMenuOrderRqDTO orderReqDTO = new PutMenuOrderRqDTO(); // 응답 형식에 따름
+		orderReqDTO.setCoffeeOrders(beanIdQuantityDTOList);
 		return orderReqDTO;
 	}
 
-
+    @Transactional
 	public void deleteOrder(MenuOrder menuOrder) {
-		// 주문 취소시 각 커피콩 재고에 취소된 수량 추가 (복구)
-		for(DetailOrder detailOrder : menuOrder.getOrders()){
-			PutRepAndResDetailOrderDTO putRepAndResDetailOrderDTO = new PutRepAndResDetailOrderDTO(detailOrder.getId(), detailOrder.getQuantity());
-			CoffeeBean coffeeBean = coffeeBeanService.findById(putRepAndResDetailOrderDTO.getId());
-			coffeeBean.setQuantity(coffeeBean.getQuantity() + putRepAndResDetailOrderDTO.getQuantity());
-		}
-		// 주문 취소
+        // 커피콩 재고 수량 초기화 (주문 취소)
+        for(DetailOrder detailOrder : menuOrder.getOrders()) {
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(detailOrder.getName());
+            coffeeBeanService.changeStockWithValidation(coffeeBean, -detailOrder.getQuantity());
+        }
 		orderRepository.delete(menuOrder);
 	}
 
@@ -217,7 +214,7 @@ public class OrderService {
                     .orElseThrow(() -> new ServiceException("404-1", "존재하지 않는 원두입니다."));
 
             // 재고 확인 및 차감
-            coffeeBeanService.reduceStockWithValidation(coffeeBean, product.quantity());
+            coffeeBeanService.changeStockWithValidation(coffeeBean, product.quantity());
             coffeeBeanRepository.save(coffeeBean); // 변경된 재고 저장
 
             // DetailOrder 생성 및 추가
@@ -245,4 +242,3 @@ public class OrderService {
                 menuOrder.getOrderStatus().toString());
     }
 }
-
