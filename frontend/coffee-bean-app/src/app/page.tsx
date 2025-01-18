@@ -60,12 +60,19 @@ export default function Home() {
 
 
   // http 메세지 전송 자바 스크립트
-  
   useEffect(() => {
-    if (order.products.length > 0) {
-      sendOrder(order);
-    }
-  }, [order]); // `order`가 변경될 때마다 실행
+    const updatedProducts: PostDetailOrderDto[] = coffeeBeans
+      .map((item, index) => ({
+        id: item.id,
+        quantity: quantities[index],
+      }))
+      .filter((product) => product.quantity > 0);
+  
+    setOrder((prevOrder) => ({
+      ...prevOrder,
+      products: updatedProducts,
+    }));
+  }, [quantities]);
 
   const sendOrder = async (updatedOrder: PostOrderRequestDto) => {
       const response = await createOrder(updatedOrder);
@@ -106,7 +113,7 @@ export default function Home() {
       }));
   
      //console.log("업데이트된 주문:", order); // 업데이트된 order 확인
-    
+     await sendOrder(order); 
   };
 
   
@@ -240,7 +247,7 @@ export default function Home() {
             </form>
             
             <button
-                onClick={() => router.push("/api/login")}
+                onClick={() => router.push("/api/order/login")}
                 className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
                 >
                 주문 내역 조회

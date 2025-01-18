@@ -30,3 +30,15 @@ export async function createOrder(order: PostOrderRequestDto) {
     );
     }
   }
+
+  export async function login(email: string) {
+    const url = new URL("http://localhost:8080/api/order/login");
+    url.searchParams.append("email", email);
+    const response = await fetch(url.toString(), {
+        method: "GET",
+        headers: { "Content-Type": "application/json" },
+        
+      });
+
+    return response.json();
+}

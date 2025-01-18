@@ -1,8 +1,6 @@
 package com.ll.coffeeBean.domain.order.controller;
 
-import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.dto.*;
-import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.service.DetailOrderService;
 import com.ll.coffeeBean.domain.order.service.OrderService;
@@ -11,9 +9,10 @@ import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
+import com.ll.coffeeBean.standard.base.Empty;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
-import lombok.NonNull;
+import jakarta.validation.constraints.NotBlank;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -73,22 +72,29 @@ public class OrderController {
     }
 
 
-	record LoginDto (
-			@NonNull
-			@Email
-			String email
-	) {
+
+
+	@GetMapping("/login")
+	RsData<Empty> login(@RequestParam(name = "email", required = true)
+						@NotBlank(message = "이메일을 입력해주세요.")
+						@Email(message = "올바른 이메일 형식이 아닙니다.") String email) {
+
+		return new RsData<>(
+				"200-21",
+				"이메일 검증 성공."
+
+		);
 	}
 	// page num,pageSize, 이메일 데이터를 받아 이메일에 해당하는 MenuOrder 데이터를 page 형태로 받아옴
 	//일련번호인 email을 통해 유저 정보 검색
 	// 성공시 200번 반환, 서비스 단계에서 DTO에 매핑시켜 필요한 정보만 전송
 	//유저 정보가 없는 경우 NoSuchElementException 반환
 	@GetMapping("/history")
-	RsData<PageDto<GetResMenuOrderDto>> items(@RequestParam(defaultValue = "1") int page,
-												 @RequestParam(defaultValue = "10") int pageSize,
-												 @RequestBody LoginDto loginDto ) {
+	RsData<PageDto<GetResMenuOrderDto>> items(@RequestParam(name = "page", defaultValue = "0") int page,
+												 @RequestParam(name = "pageSize", defaultValue = "10") int pageSize,
+											  @RequestParam(name = "email",required = true) String email) {
 
-		String email = loginDto.email;
+
 		Optional<SiteUser> optionalSiteUser=siteUserService.findByEmail(email);
 		PageDto<GetResMenuOrderDto> pageDto=new PageDto<>();
 		SiteUser siteUser;
