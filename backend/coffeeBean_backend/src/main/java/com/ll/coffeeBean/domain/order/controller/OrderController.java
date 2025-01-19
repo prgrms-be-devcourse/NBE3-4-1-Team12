@@ -33,32 +33,32 @@ public class OrderController {
 
 
 
-	@PutMapping("/{orderId}")
-	RsData<PutMenuOrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
+	@PutMapping("/{id}")
+	RsData<PutMenuOrderRqDTO> modifyOrder(@PathVariable(name = "id") long id,
 										  @RequestBody @Valid PutMenuOrderRqDTO reqDetailOrders) {
 		// PutMenuOrderRqDTO 를 통해 커피콩들의 아이디와 수량이 요청 바디로 넘어옴
 
 		// orderId 에 해당하는 주문 찾기
-		MenuOrder menuOrder = orderService.findById(orderId)
-				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
+		MenuOrder menuOrder = orderService.findById(id)
+				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + id));
 
 		// 찾은 주문과 사용자 요청 서비스로 전달
 		PutMenuOrderRqDTO orderPayload = orderService.modify(menuOrder, reqDetailOrders);
 
 		// 상태코드와 메시지, 수정 요청한 사용자의 주문 내용 응답에 보냄
 		return new RsData<>(
-				"200-1", "%d번 주문이 수정되었습니다.".formatted(orderId),
+				"200-1", "%d번 주문이 수정되었습니다.".formatted(id),
 				orderPayload
 		);
 	}
 
-	@DeleteMapping("/{orderId}")
-	RsData<Void> deleteOrder(@PathVariable(name = "orderId") long orderId) {
-		MenuOrder menuOrder = orderService.findById(orderId)
-				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
+	@DeleteMapping("/{id}")
+	RsData<Void> deleteOrder(@PathVariable(name = "id") long id) {
+		MenuOrder menuOrder = orderService.findById(id)
+				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + id));
 		orderService.deleteOrder(menuOrder);
 		return new RsData<> (
-				"200-1", "%d번 주문이 삭제되었습니다." .formatted(orderId));
+				"200-1", "%d번 주문이 삭제되었습니다." .formatted(id));
 		}
 
     @PostMapping
@@ -124,7 +124,7 @@ public class OrderController {
 	 * - 응답: 하나의 주문에 대한 전체 정보(PagingResMenuOrderDto)를 반환 (상세 주문 항목 포함)
 	 */
 	@GetMapping("/history/{id}")
-	public ResponseEntity<RsData<Map<String, Object>>> getOrderDetail(@PathVariable long id) {
+	public ResponseEntity<RsData<Map<String, Object>>> getOrderDetail(@PathVariable(name = "id") long id) {
 		Optional<MenuOrder> optionalOrder = orderService.findById(id);
 
 
