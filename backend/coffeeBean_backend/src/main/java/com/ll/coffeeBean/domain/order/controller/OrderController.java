@@ -13,6 +13,8 @@ import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import java.util.HashMap;
@@ -36,6 +38,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
+@Tag(name = "OrderController", description = "주문 컨트롤러")
 public class OrderController {
     private final OrderService orderService;
     private final DetailOrderService detailOrderService;
@@ -43,6 +46,7 @@ public class OrderController {
 
 
     @PutMapping("/{orderId}")
+    @Operation(summary = "주문 수정")
     RsData<PutMenuOrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
                                           @RequestBody @Valid PutMenuOrderRqDTO reqDetailOrders) {
         // PutMenuOrderRqDTO 를 통해 커피콩들의 아이디와 수량이 요청 바디로 넘어옴
@@ -62,6 +66,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{orderId}")
+    @Operation(summary = "주문 삭제")
     RsData<Void> deleteOrder(@PathVariable(name = "orderId") long orderId) {
         MenuOrder menuOrder = orderService.findById(orderId)
                 .orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
@@ -71,6 +76,7 @@ public class OrderController {
     }
 
     @PostMapping
+    @Operation(summary = "주문 등록")
     public RsData<PostOrderResponseDto> createOrder(@RequestBody @Valid PostOrderRequestDto request) {
         PostOrderResponseDto response = orderService.createOrder(request);
         return new RsData<>(
@@ -93,6 +99,7 @@ public class OrderController {
     // 성공시 200번 반환, 서비스 단계에서 DTO에 매핑시켜 필요한 정보만 전송
     //유저 정보가 없는 경우 NoSuchElementException 반환
     @GetMapping("/history")
+    @Operation(summary = "주문 다건조회")
     RsData<PageDto<GetResMenuOrderDto>> items(@RequestParam(defaultValue = "1") int page,
                                               @RequestParam(defaultValue = "10") int pageSize,
                                               @RequestBody LoginDto loginDto) {
@@ -126,6 +133,7 @@ public class OrderController {
      * 항목 포함)
      */
     @GetMapping("/history/{id}")
+    @Operation(summary = "주문 단건조회")
     public ResponseEntity<RsData<Map<String, Object>>> getOrderDetail(@PathVariable long id) {
         Optional<MenuOrder> optionalOrder = orderService.findById(id);
 
