@@ -287,9 +287,11 @@ class OrderServiceTest {
         orderService.processOrderByScheduled();
 
         // then
+        SiteUser user = siteUserRepository.findById(1L).get();
         assertEquals(pastOrderRepository.count(), 1L);
         assertEquals(detailOrderRepository.count(), 3);
         assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().getFirst().getOrders().getFirst().getName(), "bean1");
     }
 
     @Test
@@ -314,9 +316,11 @@ class OrderServiceTest {
         orderService.processOrderByScheduled();
 
         // then
+        SiteUser user = siteUserRepository.findById(1L).get();
         assertEquals(pastOrderRepository.count(), 0);
         assertEquals(detailOrderRepository.count(), 0);
         assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().size(), 0);
     }
 
     @Test
