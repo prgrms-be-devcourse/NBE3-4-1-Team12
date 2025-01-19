@@ -133,6 +133,9 @@ public class OrderService {
         order.getCustomer().removeOrder(order);
     }
 
+    /**
+     * 3개월이 지난 주문 목록 삭제
+     */
     @Transactional
     public void processPastOrder(PastOrder order) {
         order.getCustomer().removePastOrder(order);
