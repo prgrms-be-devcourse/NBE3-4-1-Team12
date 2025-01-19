@@ -247,7 +247,7 @@ export default function Home() {
             </form>
             
             <button
-                onClick={() => router.push("/api/order/login")}
+                onClick={() => router.push("/order/login")}
                 className="mt-4 w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
                 >
                 주문 내역 조회
