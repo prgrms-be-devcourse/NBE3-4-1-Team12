@@ -10,7 +10,7 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
-import com.ll.coffeeBean.domain.siteUser.service.UserService;
+import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -19,12 +19,14 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
     private final OrderService orderService;
     private final OrderRepository orderRepository;
-    private final UserService userService;
+    private final SiteUserService siteUserService;
     private final SiteUserRepository siteUserRepository;
     private final DetailOrderRepository detailOrderRepository;
     private final CoffeeBeanService coffeeBeanService;
@@ -43,6 +45,7 @@ public class BaseInitData {
 
     @Transactional
     public void work1() {
+        // 커피콩 샘플 데이터 생성
         if (coffeeBeanService.count() == 0) {
             CoffeeBean bean1 = new CoffeeBean("bean1", 1000, 49);
             coffeeBeanRepository.save(bean1);
@@ -52,15 +55,18 @@ public class BaseInitData {
             coffeeBeanRepository.save(bean3);
         }
 
-        SiteUser user1 = new SiteUser();
-
-        if (userService.count() == 0) {
+        // 고객 샘플 데이터 생성
+        SiteUser user1;
+        Optional<SiteUser> user1Optional = siteUserService.findByEmail("user1@naver.com");
+        if (user1Optional.isEmpty()) {
+            user1 = new SiteUser();
             user1.setEmail("user1@naver.com");
             siteUserRepository.save(user1);
         } else {
-            user1 = userService.findByEmail("user1@naver.com");
+            user1 = user1Optional.get();
         }
 
+        // 주문 샘플 데이터 생성
         if (orderService.count() == 0) {
             MenuOrder order1 = new MenuOrder();
             order1.setCustomer(user1);
