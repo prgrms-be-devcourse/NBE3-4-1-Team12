@@ -1,16 +1,9 @@
 package com.ll.coffeeBean.domain.order.service;
 
-import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
-
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
-import com.ll.coffeeBean.domain.order.dto.BeanIdQuantityDTO;
-import com.ll.coffeeBean.domain.order.dto.GetResMenuOrderDto;
-import com.ll.coffeeBean.domain.order.dto.PostDetailOrderDto;
-import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
-import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
-import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
+import com.ll.coffeeBean.domain.order.dto.*;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -22,16 +15,19 @@ import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
+import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
 
 @Service
 @RequiredArgsConstructor
@@ -196,6 +192,8 @@ public class OrderService {
                 .orderStatus(READY_FOR_DELIVERY)
                 .customer(customer)
                 .build();
+
+        customer.getOrders().add(menuOrder);
 
         int totalPrice = 0;
         List<DetailOrder> detailOrders = new ArrayList<>();
