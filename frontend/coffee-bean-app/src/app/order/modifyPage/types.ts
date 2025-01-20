@@ -25,6 +25,6 @@ export interface PutMenuOrderRequestDTO {
 }
 
 export interface BeanIdQuantityDTO {
-    id: number; // Java에서 Long → TypeScript에서 number
+    name: string; // Java에서 Long → TypeScript에서 number
     quantity: number; // Java의 Integer → TypeScript의 number
 }

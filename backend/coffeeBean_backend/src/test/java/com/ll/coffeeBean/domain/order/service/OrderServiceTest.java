@@ -1,9 +1,6 @@
 package com.ll.coffeeBean.domain.order.service;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-
-import com.ll.coffeeBean.domain.order.dto.BeanIdQuantityDTO;
+import com.ll.coffeeBean.domain.order.dto.BeanNameQuantityDTO;
 import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
@@ -14,15 +11,19 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -264,10 +265,10 @@ class OrderServiceTest {
         assertEquals(menuOrder.getCustomer().getEmail(), "user1@naver.com");
         assertEquals(menuOrder.getOrders().get(2).getName(), "bean3");
 
-        List<BeanIdQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
-        BeanIdQuantityDTO beanId1 = new BeanIdQuantityDTO(1L, 1);
-        BeanIdQuantityDTO beanId2 = new BeanIdQuantityDTO(2L, 2);
-        BeanIdQuantityDTO beanId3 = new BeanIdQuantityDTO(3L, 0);
+        List<BeanNameQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
+        BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("bean1", 1);
+        BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("bean2", 2);
+        BeanNameQuantityDTO beanId3 = new BeanNameQuantityDTO("bean3", 0);
         beanIdQuantityDTOS.add(beanId1);
         beanIdQuantityDTOS.add(beanId2);
         beanIdQuantityDTOS.add(beanId3);
@@ -282,7 +283,7 @@ class OrderServiceTest {
         menuOrder = orderRepository.findById(1L).get();
 
         beanIdQuantityDTOS = new ArrayList<>();
-        beanId1 = new BeanIdQuantityDTO(1L, 0);
+        beanId1 = new BeanNameQuantityDTO("bean1", 0);
         beanIdQuantityDTOS.add(beanId1);
         beanIdQuantityDTOS.add(beanId2);
 

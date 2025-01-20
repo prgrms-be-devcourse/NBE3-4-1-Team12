@@ -134,33 +134,33 @@ public class OrderService {
     @Transactional
     public PutMenuOrderRqDTO modify(MenuOrder menuOrder, PutMenuOrderRqDTO reqDetailOrders) {
         // reqBody 에 담겨있는 주문 목록 받기
-        List<BeanIdQuantityDTO> beansDTOList = reqDetailOrders.getCoffeeOrders();
+        List<BeanNameQuantityDTO> beansDTOList = reqDetailOrders.getCoffeeOrders();
 
         // 받아온 주문들의 각 커피콩 별 주문 처리
-        for (BeanIdQuantityDTO beanIdQuantityDTO : beansDTOList) {
+        for (BeanNameQuantityDTO beanNameQuantityDTO : beansDTOList) {
             // 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
             DetailOrder beanOrderToChange = menuOrder.getOrders()
                     .stream()
-                    .filter(beanOrder -> beanOrder.getId().equals(beanIdQuantityDTO.getId()))
+                    .filter(beanOrder -> beanOrder.getName().equals(beanNameQuantityDTO.getName()))
                     .findFirst().get();
             // 재고관련 확인 및 처리
-            CoffeeBean coffeeBean = coffeeBeanService.findById(beanIdQuantityDTO.getId());
-            int changeQuantity = beanIdQuantityDTO.getQuantity() - beanOrderToChange.getQuantity(); // 신규 - 기존
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(beanNameQuantityDTO.getName());
+            int changeQuantity = beanNameQuantityDTO.getQuantity() - beanOrderToChange.getQuantity(); // 신규 - 기존
             coffeeBeanService.changeStockWithValidation(coffeeBean, changeQuantity);
             // 커피콩 주문 수량 변경
-            if (beanIdQuantityDTO.getQuantity() == 0) {
+            if (beanNameQuantityDTO.getQuantity() == 0) {
                 // 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
                 menuOrder.removeDetail(beanOrderToChange);
                 detailOrderRepository.delete(beanOrderToChange);
             } else {
                 // 실제 수량 변경 로직
-                beanOrderToChange.setQuantity(beanIdQuantityDTO.getQuantity());
+                beanOrderToChange.setQuantity(beanNameQuantityDTO.getQuantity());
             }
         }
         // 고객의 현재 주문 상태 DTO 에 담아 반환
-        List<BeanIdQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
+        List<BeanNameQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
         for (DetailOrder beanOrders : menuOrder.getOrders()) {
-            BeanIdQuantityDTO beanIdQuantityDto = new BeanIdQuantityDTO(beanOrders.getId(), beanOrders.getQuantity());
+            BeanNameQuantityDTO beanIdQuantityDto = new BeanNameQuantityDTO(beanOrders.getName(), beanOrders.getQuantity());
             beanIdQuantityDTOList.add(beanIdQuantityDto);
         }
         PutMenuOrderRqDTO orderReqDTO = new PutMenuOrderRqDTO(); // 응답 형식에 따름

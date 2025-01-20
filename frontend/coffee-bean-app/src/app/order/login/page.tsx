@@ -40,7 +40,7 @@ export default function Page() {
         
         const resultCode=response.resultCode;
         const statusCode = parseInt(resultCode.split("-")[0],10);
-
+        
         if(statusCode==200) {
             router.push(`/order/history?page=0&pageSize=10&email=${encodeURIComponent(email)}`);
             return;

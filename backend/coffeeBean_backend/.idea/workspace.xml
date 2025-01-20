@@ -5,9 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../.idea/dataSources.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/modules.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../.idea/modules/coffeeBean_backend.main.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/[id]/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/[id]/route.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -100,7 +100,7 @@
     "Spring Boot.WebApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "Merging feature__frontend__nodonghui",
+    "git-widget-placeholder": "feature__frontend__nodonghui",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
     "node.js.detected.package.eslint": "true",
@@ -134,7 +134,7 @@
       <recent name="com.ll.coffeeBean.domain.order.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.OrderControllerTest (1)">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.WebApplication" />
       <module name="coffeeBean_backend.main" />
@@ -315,11 +315,6 @@
           <url>file://$PROJECT_DIR$/src/main/java/org/example/Main.java</url>
           <line>13</line>
           <option name="timeStamp" value="1" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/main/java/com/ll/coffeeBean/domain/order/service/OrderService.java</url>
-          <line>142</line>
-          <option name="timeStamp" value="12" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

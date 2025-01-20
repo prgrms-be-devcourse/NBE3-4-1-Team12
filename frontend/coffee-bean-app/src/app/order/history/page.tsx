@@ -28,8 +28,8 @@ export async function GetList(page: number, pageSize: number ,email: string): Pr
     return resData;
   }
 
-  export async function DeleteOrder(id: number): Promise<RsData> {
-    const url = new URL(`/api/order/${id}`, window.location.origin);
+  export async function DeleteOrder(orderId: number): Promise<RsData> {
+    const url = new URL(`/api/order/${orderId}`, window.location.origin);
 
     const response = await fetch(url.toString(), {
         method: "DELETE",
