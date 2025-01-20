@@ -12,5 +12,6 @@ public interface PastOrderRepository extends JpaRepository<PastOrder, Long> {
 
     List<PastOrder> findByCreateDateBefore(LocalDateTime endDate);
 
-    Page<PastOrder> findByCustomer(Pageable pageable, SiteUser siteUser);
+    Page<PastOrder> findByCustomer(SiteUser siteUser, Pageable pageable);
+    PastOrder findByCustomer(SiteUser siteUser);
 }
