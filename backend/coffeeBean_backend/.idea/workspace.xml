@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-
-    <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/[id]/page.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/[id]/route.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" afterDir="false" />
-
+    <list default="true" id="bddc9782-6662-4cdc-b656-034ff330bb01" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../.idea/gradle.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../../.idea/gradle.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/../.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -37,44 +35,21 @@
     </system>
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
   <component name="PropertiesComponent"><![CDATA[{
   "keyToString": {
     "Application.Main.executor": "Run",
-    "Gradle.coffeeBean_backend [:WebApplication.main()].executor": "Run",
-    "Gradle.coffeeBean_backend [dependencies].executor": "Run",
-    "JUnit.OrderControllerTest.executor": "Run",
-    "JUnit.OrderControllerTest.t10.executor": "Run",
-    "JUnit.OrderControllerTest.t7.executor": "Run",
-    "JUnit.OrderControllerTest.t8.executor": "Run",
-    "JUnit.OrderControllerTest.t9.executor": "Run",
-    "RequestMappingsPanelOrder0": "0",
-    "RequestMappingsPanelOrder1": "1",
-    "RequestMappingsPanelWidth0": "75",
-    "RequestMappingsPanelWidth1": "75",
+    "Application.WebApplication.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "RunOnceActivity.git.unshallow": "true",
-    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
-    "Spring Boot.WebApplication.executor": "Run",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
-    "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-<<<<<<< HEAD
-    "git-widget-placeholder": "fix/order",
-=======
-    "git-widget-placeholder": "feature__frontend__nodonghui",
->>>>>>> feature_frontend_nodonghui
+    "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
-    "node.js.detected.package.eslint": "true",
-    "node.js.detected.package.tslint": "true",
-    "node.js.selected.package.eslint": "(autodetect)",
-    "node.js.selected.package.tslint": "(autodetect)",
-    "nodejs_package_manager_path": "npm",
-    "onboarding.tips.debug.path": "C:/Users/rdh04/Project/coffeeBean-project/backend/coffeeBean_backend/src/main/java/org/example/Main.java",
-    "project.structure.last.edited": "SDKs",
-    "project.structure.proportion": "0.15",
-    "project.structure.side.proportion": "0.2",
-    "settings.editor.selected.configurable": "editor.preferences.import",
-    "vue.rearranger.settings.migration": "true"
+    "last_opened_file_path": "C:/Users/rdh04/Project/coffeeBean-project/backend/coffeeBean_backend",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.0",
+    "project.structure.side.proportion": "0.0"
   }
 }]]></component>
   <component name="RecentsManager">
@@ -95,7 +70,7 @@
       <recent name="com.ll.coffeeBean.domain.order.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.WebApplication" />
       <module name="coffeeBean_backend.main" />
@@ -205,14 +180,6 @@
       </list>
     </recent_temporary>
   </component>
-  <component name="SharedIndexes">
-    <attachedChunks>
-      <set>
-        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
-        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
-      </set>
-    </attachedChunks>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -231,8 +198,6 @@
     </task>
     <servers />
   </component>
-<<<<<<< HEAD
-=======
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
@@ -294,5 +259,4 @@
     <expand />
     <select />
   </component>
->>>>>>> feature_frontend_nodonghui
 </project>
