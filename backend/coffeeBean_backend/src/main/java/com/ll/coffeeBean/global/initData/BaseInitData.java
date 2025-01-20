@@ -10,15 +10,12 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
-<<<<<<< HEAD
 
 import com.ll.coffeeBean.domain.siteUser.service.UserService;
 
 import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 
-=======
-import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -32,19 +29,6 @@ import java.util.Optional;
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
-<<<<<<< HEAD
-
-	private final OrderService orderService;
-	private final OrderRepository orderRepository;
-	private final UserService userService;
-	private final SiteUserRepository siteUserRepository;
-	private final DetailOrderRepository detailOrderRepository;
-	private final CoffeeBeanService coffeeBeanService;
-	private final CoffeeBeanRepository coffeeBeanRepository;
-    private final SiteUserService siteUserService;
-
-
-=======
     private final OrderService orderService;
     private final OrderRepository orderRepository;
     private final SiteUserService siteUserService;
@@ -52,7 +36,6 @@ public class BaseInitData {
     private final DetailOrderRepository detailOrderRepository;
     private final CoffeeBeanService coffeeBeanService;
     private final CoffeeBeanRepository coffeeBeanRepository;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
     @Autowired
     @Lazy
@@ -77,10 +60,6 @@ public class BaseInitData {
             coffeeBeanRepository.save(bean3);
         }
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
         // 고객 샘플 데이터 생성
         SiteUser user1;
         Optional<SiteUser> user1Optional = siteUserService.findByEmail("user1@naver.com");
@@ -91,10 +70,6 @@ public class BaseInitData {
         } else {
             user1 = user1Optional.get();
         }
-<<<<<<< HEAD
-
-=======
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
         // 주문 샘플 데이터 생성
         if (orderService.count() == 0) {

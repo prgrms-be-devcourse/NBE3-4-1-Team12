@@ -1,15 +1,12 @@
 package com.ll.coffeeBean.domain.order.controller;
 
-<<<<<<< HEAD
 
 import com.ll.coffeeBean.domain.order.dto.*;
-=======
 import com.ll.coffeeBean.domain.order.dto.GetResDetailOrderDto;
 import com.ll.coffeeBean.domain.order.dto.GetResMenuOrderDto;
 import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
 import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
 import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.service.DetailOrderService;
 import com.ll.coffeeBean.domain.order.service.OrderService;
@@ -18,7 +15,6 @@ import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
-<<<<<<< HEAD
 
 import com.ll.coffeeBean.standard.base.Empty;
 
@@ -32,19 +28,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-=======
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
-<<<<<<< HEAD
-=======
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -57,7 +49,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
 @RestController
 @RequiredArgsConstructor
@@ -65,16 +56,8 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name = "OrderController", description = "주문 컨트롤러")
 public class OrderController {
     private final OrderService orderService;
-<<<<<<< HEAD
-
     private final DetailOrderService detailOrderService;
     private final SiteUserService siteUserService;
-
-
-=======
-    private final DetailOrderService detailOrderService;
-    private final SiteUserService siteUserService;
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
 
     @PutMapping("/{orderId}")
@@ -87,17 +70,6 @@ public class OrderController {
         MenuOrder menuOrder = orderService.findById(orderId)
                 .orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
 
-<<<<<<< HEAD
-		PutMenuOrderRqDTO orderPayload = orderService.modify(menuOrder, reqDetailOrders);
-		// 상태코드와 메시지, 수정 요청한 사용자의 주문 내용 응답에 보냄
-		return new RsData<>(
-				"200-1", "%d번 주문이 수정되었습니다.".formatted(orderId),
-				orderPayload
-		);
-	}
-
-
-=======
         // 찾은 주문과 사용자 요청 서비스로 전달
         PutMenuOrderRqDTO orderPayload = orderService.modify(menuOrder, reqDetailOrders);
 
@@ -107,7 +79,6 @@ public class OrderController {
                 orderPayload
         );
     }
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
     @DeleteMapping("/{orderId}")
     @Operation(summary = "주문 삭제")
@@ -182,7 +153,6 @@ public class OrderController {
 
         return ResponseEntity.ok(new RsData<>("200-1", "주문 상세 조회 성공", response));
     }
-<<<<<<< HEAD
 
 
 
@@ -224,7 +194,5 @@ public class OrderController {
 
 
 
-=======
->>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
 }
