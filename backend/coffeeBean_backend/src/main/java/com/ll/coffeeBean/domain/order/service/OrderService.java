@@ -80,9 +80,20 @@ public class OrderService {
         List<MenuOrder> orders = orderRepository.findByCreateDateGreaterThanEqualAndCreateDateBefore(startDate,
                 endDate);
 
+        // 24시간 동안 쌓인 주문 처리
         for (MenuOrder order : orders) {
             processOrder(order);
         }
+
+        endDate = endDate.minusMonths(3);
+
+        List<PastOrder> pastOrders = pastOrderRepository.findByCreateDateBefore(endDate);
+
+        // 3개월 전까지의 PastOrder 모두 삭제
+        for (PastOrder pastOrder : pastOrders) {
+            processPastOrder(pastOrder);
+        }
+
         System.out.println("\n\n========================");
         System.out.println("End Scheduled!!\n\n");
     }
@@ -97,7 +108,7 @@ public class OrderService {
          * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
          */
         int totalPrice = 0;
-//
+
         List<DetailOrder> orders = order.getOrders();
 
         PastOrder pastOrder = PastOrder.builder()
@@ -116,6 +127,14 @@ public class OrderService {
 
         // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
         order.getCustomer().removeOrder(order);
+    }
+
+    /**
+     * 3개월이 지난 주문 목록 삭제
+     */
+    @Transactional
+    public void processPastOrder(PastOrder order) {
+        order.getCustomer().removePastOrder(order);
     }
 
     public Optional<MenuOrder> findById(long id) {

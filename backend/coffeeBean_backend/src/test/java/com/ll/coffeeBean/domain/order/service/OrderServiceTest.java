@@ -14,6 +14,9 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import com.ll.coffeeBean.global.jpa.entity.BaseTime;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -217,7 +220,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder도 함께 삭제")
+    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder 도 함께 삭제")
     void test_deleteMenuOrderAliveDetailOrderFailed() {
         // given
         assertEquals(orderRepository.count(), 1L);
@@ -255,6 +258,62 @@ class OrderServiceTest {
         assertEquals(orderRepository.count(), 0L);
         assertEquals(detailOrderRepository.count(), 3L);
         assertEquals(siteUserRepository.count(), 1L);
+    }
+
+    @Test
+    @DisplayName("delete - 기간에 맞지 않는 PastOrder 는 찾아서 삭제하지 않음")
+    void test_deletePastOrderDetailOrderFailed() throws Exception {
+        // given
+        // 임의로 주문 처리 후, PastOrderDB 세팅
+        orderService.processOrderByScheduled();
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+
+        // createDate 변경
+        PastOrder pastOrder = pastOrderRepository.findAll().get(0);
+        Field createDateField = BaseTime.class.getDeclaredField("createDate");
+        createDateField.setAccessible(true);
+        createDateField.set(pastOrder, LocalDateTime.now().minusMonths(1));
+        pastOrderRepository.saveAndFlush(pastOrder);
+
+        // when
+        orderService.processOrderByScheduled();
+
+        // then
+        SiteUser user = siteUserRepository.findById(1L).get();
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3);
+        assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().getFirst().getOrders().getFirst().getName(), "bean1");
+    }
+
+    @Test
+    @DisplayName("delete - PastOrder 삭제 시 DetailOrder 도 함께 삭제")
+    void test_deletePastOrderDetailOrderSuccess() throws Exception {
+        // given
+        // 임의로 주문 처리 후, PastOrderDB 세팅
+        orderService.processOrderByScheduled();
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+
+        // createDate 변경
+        PastOrder pastOrder = pastOrderRepository.findAll().get(0);
+        Field createDateField = BaseTime.class.getDeclaredField("createDate");
+        createDateField.setAccessible(true);
+        createDateField.set(pastOrder, LocalDateTime.now().minusMonths(3));
+        pastOrderRepository.saveAndFlush(pastOrder);
+
+        // when
+        orderService.processOrderByScheduled();
+
+        // then
+        SiteUser user = siteUserRepository.findById(1L).get();
+        assertEquals(pastOrderRepository.count(), 0);
+        assertEquals(detailOrderRepository.count(), 0);
+        assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().size(), 0);
     }
 
     @Test
