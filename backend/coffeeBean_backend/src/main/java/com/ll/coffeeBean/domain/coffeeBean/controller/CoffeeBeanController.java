@@ -6,6 +6,8 @@ import com.ll.coffeeBean.domain.coffeeBean.dto.CoffeeBeanResponseDTO;
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
 import com.ll.coffeeBean.global.rsData.RsData;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -14,11 +16,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/bean")
+@Tag(name = "CoffeeBeanController", description = "커피콩 컨트롤러")
 public class CoffeeBeanController {
 
 	private final CoffeeBeanService CoffeeBeanService;
 
 	@PostMapping
+	@Operation(summary = "커피콩 등록")
 	public RsData<CoffeeBeanResponseDTO> createCoffeeBean(@Valid @RequestBody
 															  CoffeeBeanRequestDTO reqBody) {
 
@@ -40,6 +44,7 @@ public class CoffeeBeanController {
 	){}
 
 	@PutMapping("/{id}")
+	@Operation(summary = "커피콩 수정")
 	public RsData<CoffeeBeanResponseDTO> modifyCoffeeBean(@PathVariable(name = "id") long id,
 															 @RequestBody @Valid UpdateCoffeeBeanRequest reqBody) {
 
