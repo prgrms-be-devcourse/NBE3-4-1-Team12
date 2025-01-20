@@ -39,6 +39,7 @@ public class BaseInitData {
     private final SiteUserService siteUserService;
 
 
+
     @Autowired
     @Lazy
     private BaseInitData self;
