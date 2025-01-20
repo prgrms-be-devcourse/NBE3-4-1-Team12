@@ -1,5 +1,14 @@
 package com.ll.coffeeBean.order.controller;
 
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
 import com.ll.coffeeBean.domain.order.controller.OrderController;
@@ -11,7 +20,12 @@ import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.*;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +34,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -105,10 +110,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 5
+										       "name": "bean1", "quantity": 5
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}
@@ -136,10 +141,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 0
+										       "name": "bean1", "quantity": 0
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}
@@ -167,10 +172,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 100
+										       "name": "bean1", "quantity": 100
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}

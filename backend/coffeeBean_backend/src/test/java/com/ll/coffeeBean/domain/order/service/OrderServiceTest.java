@@ -14,19 +14,18 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import com.ll.coffeeBean.global.jpa.entity.BaseTime;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -338,7 +337,7 @@ class OrderServiceTest {
         beanIdQuantityDTOS.add(beanId2);
         beanIdQuantityDTOS.add(beanId3);
 
-        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
+        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
@@ -352,7 +351,7 @@ class OrderServiceTest {
         beanIdQuantityDTOS.add(beanId1);
         beanIdQuantityDTOS.add(beanId2);
 
-        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
+        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
