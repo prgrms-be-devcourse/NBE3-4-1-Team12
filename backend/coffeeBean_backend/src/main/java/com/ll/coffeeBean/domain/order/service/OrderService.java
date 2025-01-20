@@ -145,13 +145,13 @@ public class OrderService {
     @Transactional
     public PutMenuOrderRqDTO modify(MenuOrder menuOrder, PutMenuOrderRqDTO reqDetailOrders) {
         // reqBody 에 담겨있는 주문 목록 받기
-        List<BeanIdQuantityDTO> reqBeansDTOList = reqDetailOrders.getCoffeeOrders();
+        List<BeanNameQuantityDTO> reqBeansDTOList = reqDetailOrders.getCoffeeOrders();
 
         // 받아온 주문 목록의 각 커피콩 주문 별 처리
-        for (BeanIdQuantityDTO reqBean : reqBeansDTOList) {
-            // reqBean : 수정 원하는 커피콩의 id 와 수량
+        for (BeanNameQuantityDTO reqBean : reqBeansDTOList) {
+            // reqBean : 수정 원하는 커피콩의 이름과 수량
 
-            CoffeeBean coffeeBean = coffeeBeanService.findById(reqBean.getId());
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(reqBean.getName());
 
             DetailOrder detailOrderToChange = menuOrder.getOrders()
                     .stream()
@@ -174,13 +174,13 @@ public class OrderService {
         }
 
         // 고객의 현재 주문 상태 DTO 에 담아 반환
-        List<BeanIdQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
+        List<BeanNameQuantityDTO> beanNameQuantityDTOList = new ArrayList<>();
         for (DetailOrder beanOrders : menuOrder.getOrders()) {
-            BeanIdQuantityDTO beanIdQuantityDto = new BeanIdQuantityDTO(beanOrders.getId(), beanOrders.getQuantity());
-            beanIdQuantityDTOList.add(beanIdQuantityDto);
+            BeanNameQuantityDTO beanNameQuantityDto = new BeanNameQuantityDTO(beanOrders.getName(), beanOrders.getQuantity());
+            beanNameQuantityDTOList.add(beanNameQuantityDto);
         }
         PutMenuOrderRqDTO orderReqDTO = new PutMenuOrderRqDTO(); // 응답 형식에 따름
-        orderReqDTO.setCoffeeOrders(beanIdQuantityDTOList);
+        orderReqDTO.setCoffeeOrders(beanNameQuantityDTOList);
         return orderReqDTO;
     }
 

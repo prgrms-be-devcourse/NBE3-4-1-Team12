@@ -11,8 +11,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class BeanIdQuantityDTO {
-	private Long Id;
+public class BeanNameQuantityDTO {
+	private String name;
 
 	@Min(value = 0L, message = "주문 수량은 0 이상이어야 합니다.")
 	private Integer quantity;
