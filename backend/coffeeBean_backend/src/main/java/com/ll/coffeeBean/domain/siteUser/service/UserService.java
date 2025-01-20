@@ -18,6 +18,7 @@ public class UserService {
     }
 
     public SiteUser findByEmail(String email) {
+
         return siteUserRepository.findByEmail(email).orElseThrow();
     }
 
