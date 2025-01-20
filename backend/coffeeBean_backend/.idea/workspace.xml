@@ -4,30 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-<<<<<<< HEAD
-    <list default="true" id="858cccee-9549-403a-a6b6-6c739287d0ff" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean3.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean4.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/[id]/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/[id]/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/history/route.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/login/route.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/history/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/history/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/login/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/types.ts" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/types.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/page.tsx" afterDir="false" />
-=======
+
     <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/[id]/page.tsx" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/[id]/route.ts" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" afterDir="false" />
->>>>>>> feature_frontend_nodonghui
+
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
