@@ -29,4 +29,7 @@ public class DetailOrder extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private MenuOrder order;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    private PastOrder pastOrder;
 }

@@ -1,4 +1,13 @@
-package com.ll.coffeeBean.order.controller;
+package com.ll.coffeeBean.domain.order.controller;
+
+import static org.hamcrest.Matchers.matchesPattern;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.handler;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
@@ -11,7 +20,10 @@ import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
-import org.junit.jupiter.api.*;
+import java.nio.charset.StandardCharsets;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -20,15 +32,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.hamcrest.Matchers.matchesPattern;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -70,18 +73,40 @@ class OrderControllerTest {
 		MenuOrder order1 = new MenuOrder();
 		order1.setCustomer(user1);
 
-		DetailOrder bean1Order = new DetailOrder("bean1", 1, 1000, order1,null);
-		detailOrderRepository.save(bean1Order);
-		DetailOrder bean2Order = new DetailOrder("bean2", 2, 1000, order1,null);
-		detailOrderRepository.save(bean2Order);
-		DetailOrder bean3Order = new DetailOrder("bean3", 3, 1000, order1,null);
-		detailOrderRepository.save(bean3Order);
+        DetailOrder bean1Order = DetailOrder.builder()
+                .name("bean1")
+                .quantity(1)
+                .price(1000)
+                .build();
+        order1.addDetail(bean1Order);
 
-		List<DetailOrder> orderList = new ArrayList<>();
-		orderList.add(bean1Order);
-		orderList.add(bean2Order);
-		orderList.add(bean3Order);
-		order1.setOrders(orderList);
+        DetailOrder bean2Order = DetailOrder.builder()
+                .name("bean2")
+                .quantity(1)
+                .price(1000)
+                .build();
+        order1.addDetail(bean2Order);
+
+        DetailOrder bean3Order = DetailOrder.builder()
+                .name("bean2")
+                .quantity(1)
+                .price(1000)
+                .build();
+
+        order1.addDetail(bean3Order);
+
+//		DetailOrder bean1Order = new DetailOrder("bean1", 1, 1000, order1);
+//		detailOrderRepository.save(bean1Order);
+//		DetailOrder bean2Order = new DetailOrder("bean2", 2, 1000, order1);
+//		detailOrderRepository.save(bean2Order);
+//		DetailOrder bean3Order = new DetailOrder("bean3", 3, 1000, order1);
+//		detailOrderRepository.save(bean3Order);
+//
+//		List<DetailOrder> orderList = new ArrayList<>();
+//		orderList.add(bean1Order);
+//		orderList.add(bean2Order);
+//		orderList.add(bean3Order);
+//		order1.setOrders(orderList);
 
 		orderRepository.save(order1);
 
