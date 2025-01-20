@@ -3,13 +3,12 @@ package com.ll.coffeeBean.domain.siteUser.service;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import jakarta.transaction.Transactional;
-import lombok.AllArgsConstructor;
+import java.util.Optional;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
-@AllArgsConstructor
 @Service
+@RequiredArgsConstructor
 public class SiteUserService {
     private final SiteUserRepository siteUserRepository;
 

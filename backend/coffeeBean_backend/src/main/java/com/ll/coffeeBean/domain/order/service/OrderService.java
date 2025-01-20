@@ -1,9 +1,16 @@
 package com.ll.coffeeBean.domain.order.service;
 
+import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
+
 import com.ll.coffeeBean.domain.coffeeBean.entity.CoffeeBean;
 import com.ll.coffeeBean.domain.coffeeBean.repository.CoffeeBeanRepository;
 import com.ll.coffeeBean.domain.coffeeBean.service.CoffeeBeanService;
-import com.ll.coffeeBean.domain.order.dto.*;
+import com.ll.coffeeBean.domain.order.dto.BeanNameQuantityDTO;
+import com.ll.coffeeBean.domain.order.dto.GetResMenuOrderDto;
+import com.ll.coffeeBean.domain.order.dto.PostDetailOrderDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderRequestDto;
+import com.ll.coffeeBean.domain.order.dto.PostOrderResponseDto;
+import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.entity.PastOrder;
@@ -15,19 +22,16 @@ import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
-import static com.ll.coffeeBean.domain.order.enums.OrderStatus.READY_FOR_DELIVERY;
 
 @Service
 @RequiredArgsConstructor
@@ -71,7 +75,7 @@ public class OrderService {
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
      */
     @Transactional
-    public void processOrderByScheduled() {
+    public void processOrderByScheduling() {
         System.out.println("========================");
         System.out.println("Start Scheduled!!\n\n");
 
@@ -84,15 +88,6 @@ public class OrderService {
         // 24시간 동안 쌓인 주문 처리
         for (MenuOrder order : orders) {
             processOrder(order);
-        }
-
-        endDate = endDate.minusMonths(3);
-
-        List<PastOrder> pastOrders = pastOrderRepository.findByCreateDateBefore(endDate);
-
-        // 3개월 전까지의 PastOrder 모두 삭제
-        for (PastOrder pastOrder : pastOrders) {
-            processPastOrder(pastOrder);
         }
 
         System.out.println("\n\n========================");
@@ -128,14 +123,6 @@ public class OrderService {
 
         // 모든 작업 처리 후, 기존의 Order DB 모두 삭제
         order.getCustomer().removeOrder(order);
-    }
-
-    /**
-     * 3개월이 지난 주문 목록 삭제
-     */
-    @Transactional
-    public void processPastOrder(PastOrder order) {
-        order.getCustomer().removePastOrder(order);
     }
 
     public Optional<MenuOrder> findById(long id) {

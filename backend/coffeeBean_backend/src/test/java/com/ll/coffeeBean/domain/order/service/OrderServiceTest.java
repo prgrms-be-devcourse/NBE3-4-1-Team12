@@ -14,19 +14,18 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import com.ll.coffeeBean.global.jpa.entity.BaseTime;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -35,6 +34,9 @@ class OrderServiceTest {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private PastOrderService pastOrderService;
 
     @Autowired
     private OrderRepository orderRepository;
@@ -58,6 +60,7 @@ class OrderServiceTest {
         // given firstOrder
         assertEquals(orderRepository.count(), 1);
         assertEquals(detailOrderRepository.count(), 3);
+        assertEquals(siteUserRepository.count(), 1);
 
         orderRepository.deleteAll();
         detailOrderRepository.deleteAll();
@@ -128,7 +131,8 @@ class OrderServiceTest {
         assertEquals(detailOrderRepository.count(), 3);
 
         // when firstOrder
-        orderService.processOrderByScheduled();
+        orderService.processOrderByScheduling();
+        pastOrderRepository.flush();
 
         // then firstOrder
         assertEquals(orderRepository.count(), 0);
@@ -136,7 +140,7 @@ class OrderServiceTest {
         assertEquals(pastOrderRepository.count(), 1L);
 
         detailOrder = detailOrderRepository.findById(4L).get();
-        PastOrder pastOrder = pastOrderRepository.findById(1L).get();
+        PastOrder pastOrder = pastOrderRepository.findAll().getLast();
 
         assertEquals(detailOrder.getName(), "americano");
         assertEquals(detailOrder.getQuantity(), 2);
@@ -202,7 +206,7 @@ class OrderServiceTest {
         assertEquals(pastOrderRepository.count(), 1L);
 
         // when secondOrder
-        orderService.processOrderByScheduled();
+        orderService.processOrderByScheduling();
 
         // then secondOrder
         assertEquals(orderRepository.count(), 0);
@@ -210,7 +214,7 @@ class OrderServiceTest {
         assertEquals(pastOrderRepository.count(), 2L);
 
         newDetailOrder = detailOrderRepository.findById(7L).get();
-        pastOrder = pastOrderRepository.findById(2L).get();
+        pastOrder = pastOrderRepository.findAll().getLast();
 
         assertEquals(newDetailOrder.getName(), "ice choco");
         assertEquals(newDetailOrder.getPrice(), 4000);
@@ -253,7 +257,7 @@ class OrderServiceTest {
         assertEquals(siteUserRepository.count(), 1L);
 
         // when
-        orderService.processOrderByScheduled();
+        orderService.processOrderByScheduling();
 
         // then
         assertEquals(orderRepository.count(), 0L);
@@ -266,7 +270,7 @@ class OrderServiceTest {
     void test_deletePastOrderDetailOrderFailed() throws Exception {
         // given
         // 임의로 주문 처리 후, PastOrderDB 세팅
-        orderService.processOrderByScheduled();
+        orderService.processOrderByScheduling();
         assertEquals(orderRepository.count(), 0L);
         assertEquals(pastOrderRepository.count(), 1L);
         assertEquals(detailOrderRepository.count(), 3L);
@@ -279,7 +283,7 @@ class OrderServiceTest {
         pastOrderRepository.saveAndFlush(pastOrder);
 
         // when
-        orderService.processOrderByScheduled();
+        pastOrderService.processPastOrderByScheduling();
 
         // then
         SiteUser user = siteUserRepository.findById(1L).get();
@@ -294,7 +298,7 @@ class OrderServiceTest {
     void test_deletePastOrderDetailOrderSuccess() throws Exception {
         // given
         // 임의로 주문 처리 후, PastOrderDB 세팅
-        orderService.processOrderByScheduled();
+        orderService.processOrderByScheduling();
         assertEquals(orderRepository.count(), 0L);
         assertEquals(pastOrderRepository.count(), 1L);
         assertEquals(detailOrderRepository.count(), 3L);
@@ -307,7 +311,7 @@ class OrderServiceTest {
         pastOrderRepository.saveAndFlush(pastOrder);
 
         // when
-        orderService.processOrderByScheduled();
+        pastOrderService.processPastOrderByScheduling();
 
         // then
         SiteUser user = siteUserRepository.findById(1L).get();
@@ -332,7 +336,7 @@ class OrderServiceTest {
         beanIdQuantityDTOS.add(beanId2);
         beanIdQuantityDTOS.add(beanId3);
 
-        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
+        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
@@ -346,7 +350,7 @@ class OrderServiceTest {
         beanIdQuantityDTOS.add(beanId1);
         beanIdQuantityDTOS.add(beanId2);
 
-        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
+        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
