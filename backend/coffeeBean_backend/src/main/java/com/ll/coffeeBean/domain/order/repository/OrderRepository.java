@@ -13,10 +13,8 @@ import java.util.Optional;
 public interface OrderRepository extends JpaRepository<MenuOrder, Long> {
     List<MenuOrder> findByCreateDateGreaterThanEqualAndCreateDateBefore(LocalDateTime startDate, LocalDateTime endDate);
     Page<MenuOrder> findByCustomer(Pageable pageable, SiteUser siteUser);
-<<<<<<< HEAD
 
-=======
     List<MenuOrder> findAllById(Long id);
->>>>>>> 0bee098d8bf2c774cffb5178e482ca8ee6d4348a
+
     Optional<MenuOrder> findFirstByOrderByIdDesc();
 }

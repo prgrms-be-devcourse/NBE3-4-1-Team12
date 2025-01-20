@@ -10,11 +10,11 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.service.OrderService;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
-<<<<<<< HEAD
+
 import com.ll.coffeeBean.domain.siteUser.service.UserService;
-=======
+
 import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
->>>>>>> 0bee098d8bf2c774cffb5178e482ca8ee6d4348a
+
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationRunner;
@@ -28,7 +28,7 @@ import java.util.Optional;
 @Configuration
 @RequiredArgsConstructor
 public class BaseInitData {
-<<<<<<< HEAD
+
 	private final OrderService orderService;
 	private final OrderRepository orderRepository;
 	private final UserService userService;

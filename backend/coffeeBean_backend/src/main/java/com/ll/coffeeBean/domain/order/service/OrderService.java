@@ -205,6 +205,8 @@ public class OrderService {
                 .customer(customer)
                 .build();
 
+        customer.getOrders().add(menuOrder);
+
         int totalPrice = 0;
         List<DetailOrder> detailOrders = new ArrayList<>();
 
