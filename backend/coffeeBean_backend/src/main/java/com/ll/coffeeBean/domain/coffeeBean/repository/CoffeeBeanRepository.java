@@ -9,6 +9,4 @@ import java.util.Optional;
 @Repository
 public interface CoffeeBeanRepository extends JpaRepository<CoffeeBean, Long> {
     Optional<CoffeeBean> findByName(String name);
-
-    boolean existsByName(String name);
 }
