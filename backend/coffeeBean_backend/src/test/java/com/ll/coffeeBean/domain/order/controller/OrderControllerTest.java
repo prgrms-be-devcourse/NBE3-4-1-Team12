@@ -46,10 +46,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "name": "bean1", "quantity": 5
+										       "name": "Columbia Nariñó", "quantity": 5
 										     },
 										     {
-										       "name": "bean2", "quantity": 3
+										       "name": "Brazil Serra Do Caparao", "quantity": 3
 										     }
 										   ]
 										}
@@ -77,10 +77,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "name": "bean1", "quantity": 0
+										       "name": "Columbia Nariñó", "quantity": 0
 										     },
 										     {
-										       "name": "bean2", "quantity": 3
+										       "name": "Brazil Serra Do Caparao", "quantity": 3
 										     }
 										   ]
 										}
@@ -108,10 +108,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "name": "bean1", "quantity": 100
+										       "name": "Columbia Nariñó", "quantity": 100
 										     },
 										     {
-										       "name": "bean2", "quantity": 3
+										       "name": "Brazil Serra Do Caparao", "quantity": 3
 										     }
 										   ]
 										}
@@ -139,10 +139,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "name": "bean1", "quantity": -5
+										       "name": "Columbia Nariñó", "quantity": -5
 										     },
 										     {
-										       "name": "bean2", "quantity": 3
+										       "name": "Brazil Serra Do Caparao", "quantity": 32
 										     }
 										   ]
 										}
