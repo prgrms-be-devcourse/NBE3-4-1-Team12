@@ -51,8 +51,6 @@ public class CoffeeBeanService {
     }
 
     public CoffeeBeanResponseDTO createCoffeeBean(CoffeeBeanRequestDTO reqBody) {
-
-
         if (coffeeBeanRepository.existsByName(reqBody.getName())) { //이미 존재하는 원두인지 확인
             throw new ServiceException("400-1", "이미 존재하는 원두입니다.");
         }
@@ -64,7 +62,6 @@ public class CoffeeBeanService {
         return new CoffeeBeanResponseDTO(coffeeBean);
 
     }
-
 
     public CoffeeBeanResponseDTO modifyCoffeeBean(CoffeeBean coffeeBean, Integer price, Integer quantity) {
 
