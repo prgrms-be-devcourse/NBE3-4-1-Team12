@@ -103,7 +103,6 @@ public class OrderService {
         /**
          * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
          */
-        int totalPrice = 0;
 
         List<DetailOrder> orders = order.getOrders();
 
