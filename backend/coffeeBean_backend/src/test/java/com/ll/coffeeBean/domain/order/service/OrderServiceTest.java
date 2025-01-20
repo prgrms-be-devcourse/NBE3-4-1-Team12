@@ -15,6 +15,7 @@ import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
 import com.ll.coffeeBean.global.jpa.entity.BaseTime;
+import com.ll.coffeeBean.global.jpa.entity.BaseTime;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -26,6 +27,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -290,7 +300,7 @@ class OrderServiceTest {
         assertEquals(pastOrderRepository.count(), 1L);
         assertEquals(detailOrderRepository.count(), 3);
         assertEquals(siteUserRepository.count(), 1L);
-        assertEquals(user.getPastOrders().getFirst().getOrders().getFirst().getName(), "bean1");
+        assertEquals(user.getPastOrders().getFirst().getOrders().getFirst().getName(), "Columbia Nariñó");
     }
 
     @Test
@@ -326,17 +336,17 @@ class OrderServiceTest {
     void test_modifyAndDeleteDetailOrder() {
         MenuOrder menuOrder = orderRepository.findById(1L).get();
         assertEquals(menuOrder.getCustomer().getEmail(), "user1@naver.com");
-        assertEquals(menuOrder.getOrders().get(2).getName(), "bean3");
+        assertEquals(menuOrder.getOrders().get(2).getName(), "Columbia Quindio");
 
-        List<BeanNameQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
-        BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("bean1", 1);
-        BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("bean2", 2);
-        BeanNameQuantityDTO beanId3 = new BeanNameQuantityDTO("bean3", 0);
-        beanIdQuantityDTOS.add(beanId1);
-        beanIdQuantityDTOS.add(beanId2);
-        beanIdQuantityDTOS.add(beanId3);
+        List<BeanNameQuantityDTO> beanNameQuantityDTOS = new ArrayList<>();
+        BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("Columbia Nariñó", 1);
+        BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("Brazil Serra Do Caparao", 2);
+        BeanNameQuantityDTO beanId3 = new BeanNameQuantityDTO("Columbia Quindio", 0);
+        beanNameQuantityDTOS.add(beanId1);
+        beanNameQuantityDTOS.add(beanId2);
+        beanNameQuantityDTOS.add(beanId3);
 
-        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
@@ -345,12 +355,12 @@ class OrderServiceTest {
 
         menuOrder = orderRepository.findById(1L).get();
 
-        beanIdQuantityDTOS = new ArrayList<>();
-        beanId1 = new BeanNameQuantityDTO("bean1", 0);
-        beanIdQuantityDTOS.add(beanId1);
-        beanIdQuantityDTOS.add(beanId2);
+        beanNameQuantityDTOS = new ArrayList<>();
+        beanId1 = new BeanNameQuantityDTO("Columbia Nariñó", 0);
+        beanNameQuantityDTOS.add(beanId1);
+        beanNameQuantityDTOS.add(beanId2);
 
-        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);

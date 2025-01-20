@@ -42,12 +42,14 @@ public class BaseInitData {
     public void work1() {
         // 커피콩 샘플 데이터 생성
         if (coffeeBeanService.count() == 0) {
-            CoffeeBean bean1 = new CoffeeBean("bean1", 1000, 49);
+            CoffeeBean bean1 = new CoffeeBean("Columbia Nariñó", 5000, 50);
             coffeeBeanRepository.save(bean1);
-            CoffeeBean bean2 = new CoffeeBean("bean2", 1000, 48);
+            CoffeeBean bean2 = new CoffeeBean("Brazil Serra Do Caparao", 5500, 50);
             coffeeBeanRepository.save(bean2);
-            CoffeeBean bean3 = new CoffeeBean("bean3", 1000, 47);
+            CoffeeBean bean3 = new CoffeeBean("Columbia Quindio", 6000, 50);
             coffeeBeanRepository.save(bean3);
+            CoffeeBean bean4 = new CoffeeBean("Ethiopia Sidamo", 6500, 50);
+            coffeeBeanRepository.save(bean4);
         }
 
         // 고객 샘플 데이터 생성
@@ -68,23 +70,30 @@ public class BaseInitData {
 
             // DetailOrder 생성 시, order 를 추가하여 연결
             order1.addDetail(DetailOrder.builder()
-                    .name("bean1")
+                    .name("Columbia Nariñó")
                     .quantity(1)
-                    .price(1000)
+                    .price(5000)
                     .order(order1)
                     .build());
 
             order1.addDetail(DetailOrder.builder()
-                    .name("bean2")
+                    .name("Brazil Serra Do Caparao")
                     .quantity(1)
-                    .price(1000)
+                    .price(5500)
                     .order(order1)
                     .build());
 
             order1.addDetail(DetailOrder.builder()
-                    .name("bean3")
+                    .name("Columbia Quindio")
                     .quantity(1)
-                    .price(1000)
+                    .price(6000)
+                    .order(order1)
+                    .build());
+
+            order1.addDetail(DetailOrder.builder()
+                    .name("Ethiopia Sidamo")
+                    .quantity(1)
+                    .price(6500)
                     .order(order1)
                     .build());
 
