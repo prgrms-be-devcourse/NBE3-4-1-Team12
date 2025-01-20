@@ -14,5 +14,7 @@ public interface OrderRepository extends JpaRepository<MenuOrder, Long> {
     List<MenuOrder> findByCreateDateGreaterThanEqualAndCreateDateBefore(LocalDateTime startDate, LocalDateTime endDate);
     Page<MenuOrder> findByCustomer(Pageable pageable, SiteUser siteUser);
 
+    List<MenuOrder> findAllById(Long id);
+
     Optional<MenuOrder> findFirstByOrderByIdDesc();
 }

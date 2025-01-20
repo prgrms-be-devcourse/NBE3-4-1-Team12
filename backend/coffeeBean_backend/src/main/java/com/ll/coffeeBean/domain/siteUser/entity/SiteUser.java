@@ -9,6 +9,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import lombok.*;
 
+import java.util.ArrayList;
+
 import java.util.List;
 
 @Entity
@@ -29,8 +31,22 @@ public class SiteUser extends BaseTime {
     private String postCode;
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<MenuOrder> menu;
+    @Builder.Default
+    private List<MenuOrder> orders = new ArrayList<>();
 
     @OneToMany(mappedBy = "customer", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PastOrder> pastOrders;
+
+    public void addOrder(MenuOrder menu) {
+        this.orders.add(menu);
+        menu.setCustomer(this);
+    }
+
+    public void removeOrder(MenuOrder menu) {
+        this.orders.remove(menu);
+    }
+
+    public void removePastOrder(PastOrder pastOrder) {
+        this.pastOrders.remove(pastOrder);
+    }
 }

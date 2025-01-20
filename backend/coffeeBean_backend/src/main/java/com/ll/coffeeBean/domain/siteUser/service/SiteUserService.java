@@ -12,6 +12,7 @@ import java.util.Optional;
 @Service
 public class SiteUserService {
 
+
     private final SiteUserRepository siteUserRepository;
 
     public Optional<SiteUser> findByEmail(String email) {
@@ -22,7 +23,9 @@ public class SiteUserService {
 
     @Transactional
     public SiteUser create(String address,String email,String postCode) {
-        SiteUser siteUser=new SiteUser();
+
+        SiteUser siteUser = new SiteUser();
+
         siteUser.setAddress(address);
         siteUser.setEmail(email);
         siteUser.setPostCode(postCode);

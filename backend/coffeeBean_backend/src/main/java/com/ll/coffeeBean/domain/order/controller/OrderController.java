@@ -1,5 +1,6 @@
 package com.ll.coffeeBean.domain.order.controller;
 
+
 import com.ll.coffeeBean.domain.order.dto.*;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
 import com.ll.coffeeBean.domain.order.service.DetailOrderService;
@@ -9,7 +10,12 @@ import com.ll.coffeeBean.domain.siteUser.service.SiteUserService;
 import com.ll.coffeeBean.global.exceptions.ServiceException;
 import com.ll.coffeeBean.global.rsData.RsData;
 import com.ll.coffeeBean.standard.PageDto.PageDto;
+
 import com.ll.coffeeBean.standard.base.Empty;
+
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -26,42 +32,49 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/order")
+@Tag(name = "OrderController", description = "주문 컨트롤러")
 public class OrderController {
     private final OrderService orderService;
-	private final DetailOrderService detailOrderService;
-	private final SiteUserService siteUserService;
+
+    private final DetailOrderService detailOrderService;
+    private final SiteUserService siteUserService;
 
 
 
-	@PutMapping("/{id}")
-	RsData<PutMenuOrderRqDTO> modifyOrder(@PathVariable(name = "id") long id,
-										  @RequestBody @Valid PutMenuOrderRqDTO reqDetailOrders) {
-		// PutMenuOrderRqDTO 를 통해 커피콩들의 아이디와 수량이 요청 바디로 넘어옴
 
-		// orderId 에 해당하는 주문 찾기
-		MenuOrder menuOrder = orderService.findById(id)
-				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + id));
+    @PutMapping("/{orderId}")
+    @Operation(summary = "주문 수정")
+    RsData<PutMenuOrderRqDTO> modifyOrder(@PathVariable(name = "orderId") long orderId,
+                                          @RequestBody @Valid PutMenuOrderRqDTO reqDetailOrders) {
+        // PutMenuOrderRqDTO 를 통해 커피콩들의 아이디와 수량이 요청 바디로 넘어옴
 
-		// 찾은 주문과 사용자 요청 서비스로 전달
+        // orderId 에 해당하는 주문 찾기
+        MenuOrder menuOrder = orderService.findById(orderId)
+                .orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
+
 		PutMenuOrderRqDTO orderPayload = orderService.modify(menuOrder, reqDetailOrders);
-
 		// 상태코드와 메시지, 수정 요청한 사용자의 주문 내용 응답에 보냄
 		return new RsData<>(
-				"200-1", "%d번 주문이 수정되었습니다.".formatted(id),
+				"200-1", "%d번 주문이 수정되었습니다.".formatted(orderId),
 				orderPayload
 		);
 	}
 
-	@DeleteMapping("/{id}")
-	RsData<Void> deleteOrder(@PathVariable(name = "id") long id) {
-		MenuOrder menuOrder = orderService.findById(id)
-				.orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + id));
-		orderService.deleteOrder(menuOrder);
-		return new RsData<> (
-				"200-1", "%d번 주문이 삭제되었습니다." .formatted(id));
-		}
+
+
+    @DeleteMapping("/{orderId}")
+    @Operation(summary = "주문 삭제")
+    RsData<Void> deleteOrder(@PathVariable(name = "orderId") long orderId) {
+        MenuOrder menuOrder = orderService.findById(orderId)
+                .orElseThrow(() -> new ServiceException("404", "해당 주문을 찾을 수 없습니다. ID: " + orderId));
+        orderService.deleteOrder(menuOrder);
+        return new RsData<>(
+                "200-1", "%d번 주문이 삭제되었습니다.".formatted(orderId));
+    }
+
 
     @PostMapping
+    @Operation(summary = "주문 등록")
     public RsData<PostOrderResponseDto> createOrder(@RequestBody @Valid PostOrderRequestDto request) {
         PostOrderResponseDto response = orderService.createOrder(request);
         return new RsData<>(
@@ -85,6 +98,47 @@ public class OrderController {
 
 		);
 	}
+
+
+
+
+    /**
+     * [GET] /api/order/history/{id} - 요청: 주문 번호 (PathVariable) - 응답: 하나의 주문에 대한 전체 정보(PagingResMenuOrderDto)를 반환 (상세 주문
+     * 항목 포함)
+     */
+    @GetMapping("/history/{id}")
+    @Operation(summary = "주문 단건조회")
+    public ResponseEntity<RsData<Map<String, Object>>> getOrderDetail(@PathVariable long id) {
+        Optional<MenuOrder> optionalOrder = orderService.findById(id);
+
+        if (optionalOrder.isEmpty()) {
+            // 404 응답: 주문을 찾을 수 없을 때 요청된 ID 포함
+            Map<String, Object> errorDetails = new HashMap<>();
+            errorDetails.put("orderId", id);
+            errorDetails.put("error", "해당 id로 주문을 찾을 수 없습니다. id를 다시 확인해주세요");
+
+            return ResponseEntity.status(404)
+                    .body(new RsData<>("404-1", "주문을 찾을 수 없습니다.", errorDetails));
+        }
+
+        MenuOrder menuOrder = optionalOrder.get();
+
+        GetResMenuOrderDto menuOrderDto = new GetResMenuOrderDto(menuOrder);
+
+        List<GetResDetailOrderDto> detailOrders = menuOrder.getOrders()
+                .stream()
+                .map(GetResDetailOrderDto::new)
+                .collect(Collectors.toList());
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("menuOrder", menuOrderDto);
+
+        return ResponseEntity.ok(new RsData<>("200-1", "주문 상세 조회 성공", response));
+    }
+
+
+
+
 	// page num,pageSize, 이메일 데이터를 받아 이메일에 해당하는 MenuOrder 데이터를 page 형태로 받아옴
 	//일련번호인 email을 통해 유저 정보 검색
 	// 성공시 200번 반환, 서비스 단계에서 DTO에 매핑시켜 필요한 정보만 전송
@@ -118,40 +172,9 @@ public class OrderController {
 	}
 
 
-	/**
-	 * [GET] /api/order/history/{id}
-	 * - 요청: 주문 번호 (PathVariable)
-	 * - 응답: 하나의 주문에 대한 전체 정보(PagingResMenuOrderDto)를 반환 (상세 주문 항목 포함)
-	 */
-	@GetMapping("/history/{id}")
-	public ResponseEntity<RsData<Map<String, Object>>> getOrderDetail(@PathVariable(name = "id") long id) {
-		Optional<MenuOrder> optionalOrder = orderService.findById(id);
 
 
-		if (optionalOrder.isEmpty()) {
-			// 404 응답: 주문을 찾을 수 없을 때 요청된 ID 포함
-			Map<String, Object> errorDetails = new HashMap<>();
-			errorDetails.put("orderId", id);
-			errorDetails.put("error", "해당 id로 주문을 찾을 수 없습니다. id를 다시 확인해주세요");
-
-			return ResponseEntity.status(404)
-					.body(new RsData<>("404-1", "주문을 찾을 수 없습니다.", errorDetails));
-		}
 
 
-		MenuOrder menuOrder = optionalOrder.get();
-
-		GetResMenuOrderDto menuOrderDto = new GetResMenuOrderDto(menuOrder);
-
-		List<GetResDetailOrderDto> detailOrders = menuOrder.getOrders()
-				.stream()
-				.map(GetResDetailOrderDto::new)
-				.collect(Collectors.toList());
-
-		Map<String, Object> response = new HashMap<>();
-		response.put("menuOrder", menuOrderDto);
-
-		return ResponseEntity.ok(new RsData<>("200-1", "주문 상세 조회 성공", response));
-	}
 
 }
