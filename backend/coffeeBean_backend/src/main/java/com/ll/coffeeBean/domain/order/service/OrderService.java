@@ -35,28 +35,44 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final DetailOrderRepository detailOrderRepository;
     private final PastOrderRepository pastOrderRepository;
+<<<<<<< HEAD
 
 	private final CoffeeBeanService coffeeBeanService;
     private final SiteUserRepository siteUserRepository;
     private final CoffeeBeanRepository coffeeBeanRepository;
 
 
+=======
+    private final CoffeeBeanService coffeeBeanService;
+    private final SiteUserRepository siteUserRepository;
+    private final CoffeeBeanRepository coffeeBeanRepository;
+    private final SiteUserRepository userRepository;
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
 
     public long count() {
         return orderRepository.count();
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
     //pageable 설정 후 jpa를 유저 정보와 pageable를 이용해 page 데이터 탐색
     public PageDto<GetResMenuOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
 
         Pageable pageable = PageRequest.of(page, pageSize);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
         Page<MenuOrder> paging = this.orderRepository.findByCustomer(pageable, siteUser);
 
         Page<GetResMenuOrderDto> pagingOrderDto = paging.map(GetResMenuOrderDto::new);
         PageDto<GetResMenuOrderDto> pageDto = new PageDto<>(pagingOrderDto);
+<<<<<<< HEAD
 
+=======
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
         return pageDto;
 
     }
@@ -71,7 +87,10 @@ public class OrderService {
         return menuOrder;
     }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
     /**
      * TODO : 효율적인 스케쥴링 정하기, print -> 로그로 변경하기
      */
@@ -86,9 +105,20 @@ public class OrderService {
         List<MenuOrder> orders = orderRepository.findByCreateDateGreaterThanEqualAndCreateDateBefore(startDate,
                 endDate);
 
+        // 24시간 동안 쌓인 주문 처리
         for (MenuOrder order : orders) {
             processOrder(order);
         }
+
+        endDate = endDate.minusMonths(3);
+
+        List<PastOrder> pastOrders = pastOrderRepository.findByCreateDateBefore(endDate);
+
+        // 3개월 전까지의 PastOrder 모두 삭제
+        for (PastOrder pastOrder : pastOrders) {
+            processPastOrder(pastOrder);
+        }
+
         System.out.println("\n\n========================");
         System.out.println("End Scheduled!!\n\n");
     }
@@ -103,7 +133,7 @@ public class OrderService {
          * TODO : 작업 처리, 처리된 작업 및 처리 도중 오류 로깅
          */
         int totalPrice = 0;
-//
+
         List<DetailOrder> orders = order.getOrders();
 
         PastOrder pastOrder = PastOrder.builder()
@@ -124,47 +154,63 @@ public class OrderService {
         order.getCustomer().removeOrder(order);
     }
 
+    /**
+     * 3개월이 지난 주문 목록 삭제
+     */
+    @Transactional
+    public void processPastOrder(PastOrder order) {
+        order.getCustomer().removePastOrder(order);
+    }
+
     public Optional<MenuOrder> findById(long id) {
         return orderRepository.findById(id);
     }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> 942f7bb4dda87e5b85e542f3d40ab73c89a88b1e
     // 주문 수정 비즈니스 로직 (MenuOrder 안에 있는 DetailOrder 수정)
     @Transactional
     public PutMenuOrderRqDTO modify(MenuOrder menuOrder, PutMenuOrderRqDTO reqDetailOrders) {
         // reqBody 에 담겨있는 주문 목록 받기
-        List<BeanIdQuantityDTO> beansDTOList = reqDetailOrders.getCoffeeOrders();
+        List<BeanNameQuantityDTO> reqBeansDTOList = reqDetailOrders.getCoffeeOrders();
 
-        // 받아온 주문들의 각 커피콩 별 주문 처리
-        for (BeanIdQuantityDTO beanIdQuantityDTO : beansDTOList) {
-            // 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
-            DetailOrder beanOrderToChange = menuOrder.getOrders()
+        // 받아온 주문 목록의 각 커피콩 주문 별 처리
+        for (BeanNameQuantityDTO reqBean : reqBeansDTOList) {
+            // reqBean : 수정 원하는 커피콩의 이름과 수량
+
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(reqBean.getName());
+
+            DetailOrder detailOrderToChange = menuOrder.getOrders()
                     .stream()
-                    .filter(beanOrder -> beanOrder.getId().equals(beanIdQuantityDTO.getId()))
+                    .filter(detailOrder -> detailOrder.getName().equals(coffeeBean.getName()))
                     .findFirst().get();
+
             // 재고관련 확인 및 처리
-            CoffeeBean coffeeBean = coffeeBeanService.findById(beanIdQuantityDTO.getId());
-            int changeQuantity = beanIdQuantityDTO.getQuantity() - beanOrderToChange.getQuantity(); // 신규 - 기존
+            int changeQuantity = reqBean.getQuantity() - detailOrderToChange.getQuantity(); // 신규 - 기존
             coffeeBeanService.changeStockWithValidation(coffeeBean, changeQuantity);
+
             // 커피콩 주문 수량 변경
-            if (beanIdQuantityDTO.getQuantity() == 0) {
+            if (reqBean.getQuantity() == 0) {
                 // 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
-                menuOrder.removeDetail(beanOrderToChange);
-                detailOrderRepository.delete(beanOrderToChange);
+                menuOrder.removeDetail(detailOrderToChange);
+                detailOrderRepository.delete(detailOrderToChange);
             } else {
                 // 실제 수량 변경 로직
-                beanOrderToChange.setQuantity(beanIdQuantityDTO.getQuantity());
+                detailOrderToChange.setQuantity(reqBean.getQuantity());
             }
         }
+
         // 고객의 현재 주문 상태 DTO 에 담아 반환
-        List<BeanIdQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
+        List<BeanNameQuantityDTO> beanNameQuantityDTOList = new ArrayList<>();
         for (DetailOrder beanOrders : menuOrder.getOrders()) {
-            BeanIdQuantityDTO beanIdQuantityDto = new BeanIdQuantityDTO(beanOrders.getId(), beanOrders.getQuantity());
-            beanIdQuantityDTOList.add(beanIdQuantityDto);
+            BeanNameQuantityDTO beanNameQuantityDto = new BeanNameQuantityDTO(beanOrders.getName(), beanOrders.getQuantity());
+            beanNameQuantityDTOList.add(beanNameQuantityDto);
         }
         PutMenuOrderRqDTO orderReqDTO = new PutMenuOrderRqDTO(); // 응답 형식에 따름
-        orderReqDTO.setCoffeeOrders(beanIdQuantityDTOList);
+        orderReqDTO.setCoffeeOrders(beanNameQuantityDTOList);
         return orderReqDTO;
     }
 

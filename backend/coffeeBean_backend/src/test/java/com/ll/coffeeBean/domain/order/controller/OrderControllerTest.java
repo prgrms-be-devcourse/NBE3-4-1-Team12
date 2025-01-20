@@ -127,10 +127,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 5
+										       "name": "bean1", "quantity": 5
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}
@@ -158,10 +158,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 0
+										       "name": "bean1", "quantity": 0
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}
@@ -189,10 +189,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": 100
+										       "name": "bean1", "quantity": 100
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}
@@ -220,10 +220,10 @@ class OrderControllerTest {
 										{
 										   "coffeeOrders": [
 										     {
-										       "id": 1, "quantity": -5
+										       "name": "bean1", "quantity": -5
 										     },
 										     {
-										       "id": 2, "quantity": 3
+										       "name": "bean2", "quantity": 3
 										     }
 										   ]
 										}

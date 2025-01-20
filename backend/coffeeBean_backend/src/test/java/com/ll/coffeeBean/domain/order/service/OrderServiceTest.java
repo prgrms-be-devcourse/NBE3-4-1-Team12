@@ -3,7 +3,7 @@ package com.ll.coffeeBean.domain.order.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-import com.ll.coffeeBean.domain.order.dto.BeanIdQuantityDTO;
+import com.ll.coffeeBean.domain.order.dto.BeanNameQuantityDTO;
 import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
 import com.ll.coffeeBean.domain.order.entity.MenuOrder;
@@ -14,6 +14,9 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+import com.ll.coffeeBean.global.jpa.entity.BaseTime;
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -217,7 +220,7 @@ class OrderServiceTest {
     }
 
     @Test
-    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder도 함께 삭제")
+    @DisplayName("delete - MenuOrder 삭제 시 DetailOrder 도 함께 삭제")
     void test_deleteMenuOrderAliveDetailOrderFailed() {
         // given
         assertEquals(orderRepository.count(), 1L);
@@ -258,21 +261,77 @@ class OrderServiceTest {
     }
 
     @Test
+    @DisplayName("delete - 기간에 맞지 않는 PastOrder 는 찾아서 삭제하지 않음")
+    void test_deletePastOrderDetailOrderFailed() throws Exception {
+        // given
+        // 임의로 주문 처리 후, PastOrderDB 세팅
+        orderService.processOrderByScheduled();
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+
+        // createDate 변경
+        PastOrder pastOrder = pastOrderRepository.findAll().get(0);
+        Field createDateField = BaseTime.class.getDeclaredField("createDate");
+        createDateField.setAccessible(true);
+        createDateField.set(pastOrder, LocalDateTime.now().minusMonths(1));
+        pastOrderRepository.saveAndFlush(pastOrder);
+
+        // when
+        orderService.processOrderByScheduled();
+
+        // then
+        SiteUser user = siteUserRepository.findById(1L).get();
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3);
+        assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().getFirst().getOrders().getFirst().getName(), "bean1");
+    }
+
+    @Test
+    @DisplayName("delete - PastOrder 삭제 시 DetailOrder 도 함께 삭제")
+    void test_deletePastOrderDetailOrderSuccess() throws Exception {
+        // given
+        // 임의로 주문 처리 후, PastOrderDB 세팅
+        orderService.processOrderByScheduled();
+        assertEquals(orderRepository.count(), 0L);
+        assertEquals(pastOrderRepository.count(), 1L);
+        assertEquals(detailOrderRepository.count(), 3L);
+
+        // createDate 변경
+        PastOrder pastOrder = pastOrderRepository.findAll().get(0);
+        Field createDateField = BaseTime.class.getDeclaredField("createDate");
+        createDateField.setAccessible(true);
+        createDateField.set(pastOrder, LocalDateTime.now().minusMonths(3));
+        pastOrderRepository.saveAndFlush(pastOrder);
+
+        // when
+        orderService.processOrderByScheduled();
+
+        // then
+        SiteUser user = siteUserRepository.findById(1L).get();
+        assertEquals(pastOrderRepository.count(), 0);
+        assertEquals(detailOrderRepository.count(), 0);
+        assertEquals(siteUserRepository.count(), 1L);
+        assertEquals(user.getPastOrders().size(), 0);
+    }
+
+    @Test
     @DisplayName("modify, delete - 변경 개수 0개")
     void test_modifyAndDeleteDetailOrder() {
         MenuOrder menuOrder = orderRepository.findById(1L).get();
         assertEquals(menuOrder.getCustomer().getEmail(), "user1@naver.com");
         assertEquals(menuOrder.getOrders().get(2).getName(), "bean3");
 
-        List<BeanIdQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
-        BeanIdQuantityDTO beanId1 = new BeanIdQuantityDTO(1L, 1);
-        BeanIdQuantityDTO beanId2 = new BeanIdQuantityDTO(2L, 2);
-        BeanIdQuantityDTO beanId3 = new BeanIdQuantityDTO(3L, 0);
-        beanIdQuantityDTOS.add(beanId1);
-        beanIdQuantityDTOS.add(beanId2);
-        beanIdQuantityDTOS.add(beanId3);
+        List<BeanNameQuantityDTO> beanNameQuantityDTOS = new ArrayList<>();
+        BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("bean1", 1);
+        BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("bean2", 2);
+        BeanNameQuantityDTO beanId3 = new BeanNameQuantityDTO("bean3", 0);
+        beanNameQuantityDTOS.add(beanId1);
+        beanNameQuantityDTOS.add(beanId2);
+        beanNameQuantityDTOS.add(beanId3);
 
-        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);
@@ -281,12 +340,12 @@ class OrderServiceTest {
 
         menuOrder = orderRepository.findById(1L).get();
 
-        beanIdQuantityDTOS = new ArrayList<>();
-        beanId1 = new BeanIdQuantityDTO(1L, 0);
-        beanIdQuantityDTOS.add(beanId1);
-        beanIdQuantityDTOS.add(beanId2);
+        beanNameQuantityDTOS = new ArrayList<>();
+        beanId1 = new BeanNameQuantityDTO("bean1", 0);
+        beanNameQuantityDTOS.add(beanId1);
+        beanNameQuantityDTOS.add(beanId2);
 
-        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanIdQuantityDTOS);
+        putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
 
         assertEquals(orderRepository.count(), 1L);

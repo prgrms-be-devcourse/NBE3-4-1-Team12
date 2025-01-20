@@ -15,5 +15,5 @@ import java.util.List;
 public class PutMenuOrderRqDTO {
 
 	@Valid
-	private List<BeanIdQuantityDTO> coffeeOrders;
+	private List<BeanNameQuantityDTO> coffeeOrders;
 }
