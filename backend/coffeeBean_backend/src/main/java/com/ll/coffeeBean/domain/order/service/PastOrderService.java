@@ -20,7 +20,7 @@ public class PastOrderService {
     private final PastOrderRepository pastOrderRepository;
 
     public PageDto<GetResPastOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize);
         Page<PastOrder> paging = pastOrderRepository.findByCustomer(siteUser, pageable);
 
         Page<GetResPastOrderDto> pagingOrderDto = paging.map(GetResPastOrderDto::new);

@@ -52,7 +52,7 @@ public class OrderService {
     //pageable 설정 후 jpa를 유저 정보와 pageable를 이용해 page 데이터 탐색
     public PageDto<GetResMenuOrderDto> getList(SiteUser siteUser, int page, int pageSize) {
 
-        Pageable pageable = PageRequest.of(page - 1, pageSize);
+        Pageable pageable = PageRequest.of(page, pageSize);
         Page<MenuOrder> paging = this.orderRepository.findByCustomer(pageable, siteUser);
 
         Page<GetResMenuOrderDto> pagingOrderDto = paging.map(GetResMenuOrderDto::new);

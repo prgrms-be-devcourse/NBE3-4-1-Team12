@@ -40,7 +40,7 @@ class SiteUserServiceTest {
 
         orderService.processOrderByScheduling();
 
-        GetResPastOrderDto dto = pastOrderService.getList(siteUser, 1, 10).getItems().getFirst();
+        GetResPastOrderDto dto = pastOrderService.getList(siteUser, 0, 10).getItems().getFirst();
         PastOrder userPastOrder = siteUser.getPastOrders().getFirst();
 
         assertEquals(dto.getEmail(), siteUser.getEmail());

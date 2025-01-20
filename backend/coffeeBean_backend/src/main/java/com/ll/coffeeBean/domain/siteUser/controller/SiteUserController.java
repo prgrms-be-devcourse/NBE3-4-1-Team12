@@ -37,7 +37,7 @@ public class SiteUserController {
      */
     @GetMapping("/history")
     @Transactional(readOnly = true)
-    public RsData<PageDto<GetResPastOrderDto>> items(@RequestParam(defaultValue = "1") int page,
+    public RsData<PageDto<GetResPastOrderDto>> items(@RequestParam(defaultValue = "0") int page,
                                                      @RequestParam(defaultValue = "10") int pageSize,
                                                      @RequestBody LoginDto loginDto) {
         String email = loginDto.email;
