@@ -14,7 +14,7 @@ public class PastOrderScheduler {
     /**
      * 3시간 간격으로 3달 전까지의 PastOrder DB 삭제
      */
-    @Scheduled(cron = "0 */3 * * * *")
+    @Scheduled(cron = "0 0 */3 * * *")
     public void processPastOrderByScheduling() {
         pastOrderService.processPastOrderByScheduling();
     }

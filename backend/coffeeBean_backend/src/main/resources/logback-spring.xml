@@ -141,45 +141,56 @@
     <!-- Hibernate SQL 로그 설정 (파일로 저장) -->
     <logger name="org.hibernate.SQL" level="DEBUG" additivity="false">
         <appender-ref ref="SQL_FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="org.hibernate.orm.jdbc.bind" level="TRACE" additivity="false">
         <appender-ref ref="SQL_FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <logger name="org.hibernate.orm.jdbc.extract" level="TRACE" additivity="false">
         <appender-ref ref="SQL_FILE" />
+        <appender-ref ref="CONSOLE" />
     </logger>
 
     <!-- Order 패키지 로거 -->
-    <logger name="com.ll.coffeeBean.domain.order" level="INFO" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.order" additivity="false">
+        <level value="INFO" />
         <appender-ref ref="ORDER_FILE" />
     </logger>
-    <logger name="com.ll.coffeeBean.domain.order" level="ERROR" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.order" additivity="false">
+        <level value="ERROR" />
         <appender-ref ref="ORDER_ERROR_FILE" />
     </logger>
 
     <!-- PastOrderService 클래스 로거 -->
-    <logger name="com.ll.coffeeBean.domain.order.service.PastOrderService" level="INFO" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.order.service.PastOrderService" additivity="false">
+        <level value="INFO" />
         <appender-ref ref="PAST_ORDER_FILE" />
     </logger>
-    <logger name="com.ll.coffeeBean.domain.order.service.PastOrderService" level="ERROR" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.order.service.PastOrderService" additivity="false">
+        <level value="ERROR" />
         <appender-ref ref="PAST_ORDER_ERROR_FILE" />
     </logger>
 
     <!-- CoffeeBean 패키지의 로거 설정 -->
-    <logger name="com.ll.coffeeBean.domain.coffeeBean" level="INFO" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.coffeeBean" additivity="false">
+        <level value="INFO" />
         <appender-ref ref="COFFEE_BEAN_FILE" />
     </logger>
-    <logger name="com.ll.coffeeBean.domain.coffeeBean" level="ERROR" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.coffeeBean" additivity="false">
+        <level value="ERROR" />
         <appender-ref ref="COFFEE_BEAN_ERROR_FILE" />
     </logger>
 
     <!-- SiteUser 패키지의 로거 설정 -->
-    <logger name="com.ll.coffeeBean.domain.siteUser" level="INFO" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.siteUser" additivity="false">
+        <level value="INFO" />
         <appender-ref ref="SITE_USER_FILE" />
     </logger>
-    <logger name="com.ll.coffeeBean.domain.siteUser" level="ERROR" additivity="false">
+    <logger name="com.ll.coffeeBean.domain.siteUser" additivity="false">
+        <level value="ERROR" />
         <appender-ref ref="SITE_USER_ERROR_FILE" />
     </logger>
 
