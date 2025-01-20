@@ -8,14 +8,14 @@ import {GetResMenuOrderDto,PutMenuOrderRequestDTO,RsData } from "./types";
 export function mapOrdersToPutMenuOrderRequest(order: GetResMenuOrderDto): PutMenuOrderRequestDTO {
     return {
         coffeeOrders: order.orders.map((detail) => ({
-            id: detail.id, // GetResDetailOrderDto의 id를 BeanIdQuantityDTO의 id로 매핑
+            name: detail.name, // GetResDetailOrderDto의 id를 BeanIdQuantityDTO의 id로 매핑
             quantity: detail.quantity, // GetResDetailOrderDto의 quantity를 BeanIdQuantityDTO의 quantity로 매핑
         })),
     };
 }
 
-export async function ModifyOrder(id: number, updatedOrder: PutMenuOrderRequestDTO): Promise<RsData> {
-    const url = new URL(`/api/order/${id}`, window.location.origin);
+export async function ModifyOrder(orderId: number, updatedOrder: PutMenuOrderRequestDTO): Promise<RsData> {
+    const url = new URL(`/api/order/${orderId}`, window.location.origin);
 
     const response = await fetch(url.toString(), {
         method: "PUT",
@@ -36,7 +36,7 @@ export async function ModifyOrder(id: number, updatedOrder: PutMenuOrderRequestD
 export default function Page() {
     const router = useRouter();
     const [order, setOrder] = useState<GetResMenuOrderDto | null>(null);
-    const [modifyOrder, setModifyOrder] = useState<PutMenuOrderRequestDTO | null>(null);
+    
 
     // sessionStorage에서 데이터 불러오기
     useEffect(() => {
@@ -132,11 +132,11 @@ export default function Page() {
                 const data:RsData= await ModifyOrder(order.id, updatedOrder); // PUT 요청
                 if (data.resultCode === "200-1") {
                     alert("주문내역을 수정하였습니다");
-                    window.location.reload();
+                    router.push(`/order/history?page=0&pageSize=10&email=${encodeURIComponent(order.email)}`);
                 } else {
                     alert("주문내역 수정을 실패했습니다.");
                 }
-                router.push(`/order/history?page=0&pageSize=10&email=${encodeURIComponent(order.email)}`);
+                
                 }}
                 className="bg-black text-white px-6 py-3 rounded-lg font-semibold transition hover:bg-gray-800"
                 >

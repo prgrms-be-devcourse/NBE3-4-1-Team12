@@ -6,7 +6,7 @@ export async function GET(req: Request) {
   const email = searchParams.get("email");
 
   if (!email) {
-    return NextResponse.json({ error: "이메일이 필요하다냥!" }, { status: 400 });
+    return NextResponse.json({ error: "이메일이 필요" }, { status: 400 });
   }
 
   // 외부 API 요청 보내기

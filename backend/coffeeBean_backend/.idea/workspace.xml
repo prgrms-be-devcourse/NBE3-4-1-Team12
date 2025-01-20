@@ -4,6 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
+<<<<<<< HEAD
     <list default="true" id="858cccee-9549-403a-a6b6-6c739287d0ff" name="Changes" comment="">
       <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean1.png" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/public/images/coffeebean2.png" afterDir="false" />
@@ -21,6 +22,12 @@
       <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/types.ts" afterDir="false" />
       <change afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/types.ts" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/page.tsx" afterDir="false" />
+=======
+    <list default="true" id="08995543-7cde-4257-827b-e9d42308046d" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/[id]/page.tsx" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/api/order/[id]/route.ts" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/../../frontend/coffee-bean-app/src/app/order/modifyPage/page.tsx" afterDir="false" />
+>>>>>>> feature_frontend_nodonghui
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,7 +75,11 @@
     "Spring Boot.WebApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
+<<<<<<< HEAD
     "git-widget-placeholder": "fix/order",
+=======
+    "git-widget-placeholder": "feature__frontend__nodonghui",
+>>>>>>> feature_frontend_nodonghui
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
     "node.js.detected.package.eslint": "true",
@@ -102,7 +113,7 @@
       <recent name="com.ll.coffeeBean.domain.order.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="JUnit.OrderControllerTest (1)">
+  <component name="RunManager" selected="Application.Main">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.WebApplication" />
       <module name="coffeeBean_backend.main" />
@@ -238,4 +249,68 @@
     </task>
     <servers />
   </component>
+<<<<<<< HEAD
+=======
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="RECENT_FILTERS">
+      <map>
+        <entry key="Branch">
+          <value>
+            <list>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="origin/main" />
+                </option>
+              </RecentGroup>
+              <RecentGroup>
+                <option name="FILTER_VALUES">
+                  <option value="HEAD" />
+                </option>
+              </RecentGroup>
+            </list>
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="FILTERS">
+                <map>
+                  <entry key="branch">
+                    <value>
+                      <list>
+                        <option value="feature/order" />
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/org/example/Main.java</url>
+          <line>13</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+>>>>>>> feature_frontend_nodonghui
 </project>

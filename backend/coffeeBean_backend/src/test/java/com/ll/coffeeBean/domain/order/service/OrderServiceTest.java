@@ -1,8 +1,11 @@
 package com.ll.coffeeBean.domain.order.service;
 
+<<<<<<< HEAD
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
+=======
+>>>>>>> feature_frontend_nodonghui
 import com.ll.coffeeBean.domain.order.dto.BeanNameQuantityDTO;
 import com.ll.coffeeBean.domain.order.dto.PutMenuOrderRqDTO;
 import com.ll.coffeeBean.domain.order.entity.DetailOrder;
@@ -14,18 +17,28 @@ import com.ll.coffeeBean.domain.order.repository.OrderRepository;
 import com.ll.coffeeBean.domain.order.repository.PastOrderRepository;
 import com.ll.coffeeBean.domain.siteUser.entity.SiteUser;
 import com.ll.coffeeBean.domain.siteUser.repository.SiteUserRepository;
+<<<<<<< HEAD
 import com.ll.coffeeBean.global.jpa.entity.BaseTime;
 import java.lang.reflect.Field;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+=======
+>>>>>>> feature_frontend_nodonghui
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 @SpringBootTest
 @ActiveProfiles("test")
@@ -323,6 +336,7 @@ class OrderServiceTest {
         assertEquals(menuOrder.getCustomer().getEmail(), "user1@naver.com");
         assertEquals(menuOrder.getOrders().get(2).getName(), "bean3");
 
+<<<<<<< HEAD
         List<BeanNameQuantityDTO> beanNameQuantityDTOS = new ArrayList<>();
         BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("bean1", 1);
         BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("bean2", 2);
@@ -330,6 +344,15 @@ class OrderServiceTest {
         beanNameQuantityDTOS.add(beanId1);
         beanNameQuantityDTOS.add(beanId2);
         beanNameQuantityDTOS.add(beanId3);
+=======
+        List<BeanNameQuantityDTO> beanIdQuantityDTOS = new ArrayList<>();
+        BeanNameQuantityDTO beanId1 = new BeanNameQuantityDTO("bean1", 1);
+        BeanNameQuantityDTO beanId2 = new BeanNameQuantityDTO("bean2", 2);
+        BeanNameQuantityDTO beanId3 = new BeanNameQuantityDTO("bean3", 0);
+        beanIdQuantityDTOS.add(beanId1);
+        beanIdQuantityDTOS.add(beanId2);
+        beanIdQuantityDTOS.add(beanId3);
+>>>>>>> feature_frontend_nodonghui
 
         PutMenuOrderRqDTO putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
@@ -340,10 +363,17 @@ class OrderServiceTest {
 
         menuOrder = orderRepository.findById(1L).get();
 
+<<<<<<< HEAD
         beanNameQuantityDTOS = new ArrayList<>();
         beanId1 = new BeanNameQuantityDTO("bean1", 0);
         beanNameQuantityDTOS.add(beanId1);
         beanNameQuantityDTOS.add(beanId2);
+=======
+        beanIdQuantityDTOS = new ArrayList<>();
+        beanId1 = new BeanNameQuantityDTO("bean1", 0);
+        beanIdQuantityDTOS.add(beanId1);
+        beanIdQuantityDTOS.add(beanId2);
+>>>>>>> feature_frontend_nodonghui
 
         putMenuOrderRqDTO = new PutMenuOrderRqDTO(beanNameQuantityDTOS);
         orderService.modify(menuOrder, putMenuOrderRqDTO);
