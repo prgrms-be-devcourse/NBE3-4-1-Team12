@@ -145,37 +145,42 @@ public class OrderService {
     @Transactional
     public PutMenuOrderRqDTO modify(MenuOrder menuOrder, PutMenuOrderRqDTO reqDetailOrders) {
         // reqBody 에 담겨있는 주문 목록 받기
-        List<BeanIdQuantityDTO> beansDTOList = reqDetailOrders.getCoffeeOrders();
+        List<BeanNameQuantityDTO> reqBeansDTOList = reqDetailOrders.getCoffeeOrders();
 
-        // 받아온 주문들의 각 커피콩 별 주문 처리
-        for (BeanIdQuantityDTO beanIdQuantityDTO : beansDTOList) {
-            // 요청된 수량 변경 해야 하는 id 의 커피콩 찾기
-            DetailOrder beanOrderToChange = menuOrder.getOrders()
+        // 받아온 주문 목록의 각 커피콩 주문 별 처리
+        for (BeanNameQuantityDTO reqBean : reqBeansDTOList) {
+            // reqBean : 수정 원하는 커피콩의 이름과 수량
+
+            CoffeeBean coffeeBean = coffeeBeanService.findByName(reqBean.getName());
+
+            DetailOrder detailOrderToChange = menuOrder.getOrders()
                     .stream()
-                    .filter(beanOrder -> beanOrder.getId().equals(beanIdQuantityDTO.getId()))
+                    .filter(detailOrder -> detailOrder.getName().equals(coffeeBean.getName()))
                     .findFirst().get();
+
             // 재고관련 확인 및 처리
-            CoffeeBean coffeeBean = coffeeBeanService.findById(beanIdQuantityDTO.getId());
-            int changeQuantity = beanIdQuantityDTO.getQuantity() - beanOrderToChange.getQuantity(); // 신규 - 기존
+            int changeQuantity = reqBean.getQuantity() - detailOrderToChange.getQuantity(); // 신규 - 기존
             coffeeBeanService.changeStockWithValidation(coffeeBean, changeQuantity);
+
             // 커피콩 주문 수량 변경
-            if (beanIdQuantityDTO.getQuantity() == 0) {
+            if (reqBean.getQuantity() == 0) {
                 // 변경 수량이 0이면 아예 DetailOrder 를 삭제 (수량이 0인 주문은 없도록)
-                menuOrder.removeDetail(beanOrderToChange);
-                detailOrderRepository.delete(beanOrderToChange);
+                menuOrder.removeDetail(detailOrderToChange);
+                detailOrderRepository.delete(detailOrderToChange);
             } else {
                 // 실제 수량 변경 로직
-                beanOrderToChange.setQuantity(beanIdQuantityDTO.getQuantity());
+                detailOrderToChange.setQuantity(reqBean.getQuantity());
             }
         }
+
         // 고객의 현재 주문 상태 DTO 에 담아 반환
-        List<BeanIdQuantityDTO> beanIdQuantityDTOList = new ArrayList<>();
+        List<BeanNameQuantityDTO> beanNameQuantityDTOList = new ArrayList<>();
         for (DetailOrder beanOrders : menuOrder.getOrders()) {
-            BeanIdQuantityDTO beanIdQuantityDto = new BeanIdQuantityDTO(beanOrders.getId(), beanOrders.getQuantity());
-            beanIdQuantityDTOList.add(beanIdQuantityDto);
+            BeanNameQuantityDTO beanNameQuantityDto = new BeanNameQuantityDTO(beanOrders.getName(), beanOrders.getQuantity());
+            beanNameQuantityDTOList.add(beanNameQuantityDto);
         }
         PutMenuOrderRqDTO orderReqDTO = new PutMenuOrderRqDTO(); // 응답 형식에 따름
-        orderReqDTO.setCoffeeOrders(beanIdQuantityDTOList);
+        orderReqDTO.setCoffeeOrders(beanNameQuantityDTOList);
         return orderReqDTO;
     }
 
