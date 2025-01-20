@@ -101,7 +101,7 @@
     "Spring Boot.WebApplication.executor": "Run",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary": "JUnit5",
     "com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrarySuperClass.JUnit5": "",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "fix/order",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/Users/taehee/Documents/NBE3-4-1-Team12/backend/coffeeBean_backend",
     "node.js.detected.package.eslint": "true",
@@ -135,7 +135,7 @@
       <recent name="com.ll.coffeeBean.domain.order.controller" />
     </key>
   </component>
-  <component name="RunManager" selected="Application.Main">
+  <component name="RunManager" selected="JUnit.OrderControllerTest (1)">
     <configuration name="Main" type="Application" factoryName="Application">
       <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.WebApplication" />
       <module name="coffeeBean_backend.main" />
@@ -164,6 +164,21 @@
       <DebugAllEnabled>false</DebugAllEnabled>
       <RunAsTest>false</RunAsTest>
       <method v="2" />
+    </configuration>
+    <configuration name="OrderControllerTest (1)" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="coffeeBean_backend.test" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ll.coffeeBean.domain.order.controller.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.domain.order.controller" />
+      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.domain.order.controller.OrderControllerTest" />
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
     </configuration>
     <configuration name="OrderControllerTest" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="coffeeBean_backend.test" />
@@ -196,22 +211,6 @@
         <option name="Make" enabled="true" />
       </method>
     </configuration>
-    <configuration name="OrderControllerTest.t8" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
-      <module name="coffeeBean_backend.test" />
-      <extension name="coverage">
-        <pattern>
-          <option name="PATTERN" value="com.ll.coffeeBean.order.controller.*" />
-          <option name="ENABLED" value="true" />
-        </pattern>
-      </extension>
-      <option name="PACKAGE_NAME" value="com.ll.coffeeBean.order.controller" />
-      <option name="MAIN_CLASS_NAME" value="com.ll.coffeeBean.order.controller.OrderControllerTest" />
-      <option name="METHOD_NAME" value="t8" />
-      <option name="TEST_OBJECT" value="method" />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="OrderControllerTest.t9" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
       <module name="coffeeBean_backend.test" />
       <extension name="coverage">
@@ -231,20 +230,28 @@
     <list>
       <item itemvalue="Application.Main" />
       <item itemvalue="Gradle.coffeeBean_backend [dependencies]" />
+      <item itemvalue="JUnit.OrderControllerTest (1)" />
       <item itemvalue="JUnit.OrderControllerTest" />
-      <item itemvalue="JUnit.OrderControllerTest.t8" />
       <item itemvalue="JUnit.OrderControllerTest.t9" />
       <item itemvalue="JUnit.OrderControllerTest.t10" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="JUnit.OrderControllerTest (1)" />
         <item itemvalue="Gradle.coffeeBean_backend [dependencies]" />
         <item itemvalue="JUnit.OrderControllerTest" />
         <item itemvalue="JUnit.OrderControllerTest.t10" />
         <item itemvalue="JUnit.OrderControllerTest.t9" />
-        <item itemvalue="JUnit.OrderControllerTest.t8" />
       </list>
     </recent_temporary>
+  </component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-9823dce3aa75-fdfe4dae3a2d-intellij.indexing.shared.core-IU-243.22562.218" />
+        <option value="bundled-js-predefined-d6986cc7102b-deb605915726-JavaScript-IU-243.22562.218" />
+      </set>
+    </attachedChunks>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -260,6 +267,7 @@
       <workItem from="1737073030491" duration="60000" />
       <workItem from="1737073095848" duration="32000" />
       <workItem from="1737073271835" duration="5131000" />
+      <workItem from="1737273372824" duration="95000" />
     </task>
     <servers />
   </component>
