@@ -61,7 +61,6 @@ class OrderServiceTest {
         assertEquals(orderRepository.count(), 1);
         assertEquals(detailOrderRepository.count(), 3);
         assertEquals(siteUserRepository.count(), 1);
-        SiteUser first = siteUserRepository.findAll().getFirst();
 
         orderRepository.deleteAll();
         detailOrderRepository.deleteAll();
